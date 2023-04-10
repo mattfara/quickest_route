@@ -31,7 +31,7 @@ defmodule QuickestRoute.Search.Searcher do
     to
     |> Stream.map(&String.trim(&1))
     |> Stream.map(&prepare_to(&1))
-    |> Stream.map(&Google.get_url(from, &1, Google.get_api_key()))
+    |> Stream.map(&Google.get_direction_url(from, &1, Google.get_api_key()))
     |> Task.async_stream(&Google.call_api(&1))
     |> Stream.map(&parse(&1))
     |> Enum.sort_by(fn {_, mins} -> mins end)

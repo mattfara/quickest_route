@@ -1,0 +1,174 @@
+%{
+  "geocoded_waypoints" => [
+    %{
+      "geocoder_status" => "OK",
+      "partial_match" => true,
+      "place_id" => "ChIJJypC4w6OOIgRGk9eoIxK02U",
+      "types" => ["establishment", "library", "point_of_interest"]
+    },
+    %{
+      "geocoder_status" => "OK",
+      "partial_match" => true,
+      "place_id" => "ChIJ5yYXh9eTOIgR4rW3T7QpqfA",
+      "types" => ["establishment", "food", "point_of_interest", "restaurant"]
+    }
+  ],
+  "routes" => [
+    %{
+      "bounds" => %{
+        "northeast" => %{"lat" => 40.064974, "lng" => -83.0593777},
+        "southwest" => %{"lat" => 40.0123458, "lng" => -83.0701229}
+      },
+      "copyrights" => "Map data ©2023 Google",
+      "legs" => [
+        %{
+          "distance" => %{"text" => "4.5 mi", "value" => 7202},
+          "duration" => %{"text" => "13 mins", "value" => 779},
+          "end_address" => "5240 Bethel Center Mall, Columbus, OH 43220, USA",
+          "end_location" => %{"lat" => 40.064974, "lng" => -83.0600035},
+          "start_address" => "2800 Tremont Rd, Upper Arlington, OH 43221, USA",
+          "start_location" => %{
+            "lat" => 40.0129683,
+            "lng" => -83.06714869999999
+          },
+          "steps" => [
+            %{
+              "distance" => %{"text" => "128 ft", "value" => 39},
+              "duration" => %{"text" => "1 min", "value" => 13},
+              "end_location" => %{"lat" => 40.0132317, "lng" => -83.0674387},
+              "html_instructions" => "Head <b>northwest</b> toward <b>Tremont Rd</b>",
+              "polyline" => %{"points" => "a`fsFt`_zNA@?BEBKFC@C@EBCDGLEJ"},
+              "start_location" => %{
+                "lat" => 40.0129683,
+                "lng" => -83.06714869999999
+              },
+              "travel_mode" => "DRIVING"
+            },
+            %{
+              "distance" => %{"text" => "210 ft", "value" => 64},
+              "duration" => %{"text" => "1 min", "value" => 25},
+              "end_location" => %{
+                "lat" => 40.0131752,
+                "lng" => -83.06800229999999
+              },
+              "html_instructions" => "Turn <b>left</b> toward <b>Tremont Rd</b>",
+              "maneuver" => "turn-left",
+              "polyline" => %{"points" => "uafsFnb_zNZXB@@BB@?B@FAH?DADGPQX"},
+              "start_location" => %{"lat" => 40.0132317, "lng" => -83.0674387},
+              "travel_mode" => "DRIVING"
+            },
+            %{
+              "distance" => %{"text" => "374 ft", "value" => 114},
+              "duration" => %{"text" => "1 min", "value" => 26},
+              "end_location" => %{"lat" => 40.0123653, "lng" => -83.068817},
+              "html_instructions" => "Turn <b>left</b> onto <b>Tremont Rd</b>",
+              "maneuver" => "turn-left",
+              "polyline" => %{"points" => "kafsF~e_zNv@r@PNNVn@l@RRBD"},
+              "start_location" => %{
+                "lat" => 40.0131752,
+                "lng" => -83.06800229999999
+              },
+              "travel_mode" => "DRIVING"
+            },
+            %{
+              "distance" => %{"text" => "367 ft", "value" => 112},
+              "duration" => %{"text" => "1 min", "value" => 17},
+              "end_location" => %{"lat" => 40.0123901, "lng" => -83.0701229},
+              "html_instructions" => "Turn <b>right</b> onto <b>Northam Rd</b>",
+              "maneuver" => "turn-right",
+              "polyline" => %{"points" => "i|esFbk_zNBZGfF"},
+              "start_location" => %{"lat" => 40.0123653, "lng" => -83.068817},
+              "travel_mode" => "DRIVING"
+            },
+            %{
+              "distance" => %{"text" => "1.2 mi", "value" => 1879},
+              "duration" => %{"text" => "3 mins", "value" => 163},
+              "end_location" => %{"lat" => 40.0292677, "lng" => -83.0691265},
+              "html_instructions" => "Turn <b>right</b> at the 1st cross street onto <b>Redding Rd</b>",
+              "maneuver" => "turn-right",
+              "polyline" => %{
+                "points" => "m|esFfs_zNaEKo@CcCEmAA_BEkDIqBGm@CaDIgDI{@AkBEsDKwBG}@C}AEuACyDKkEK[A[AyBGaFK}CIaGO{BEa@AwAA"
+              },
+              "start_location" => %{"lat" => 40.0123901, "lng" => -83.0701229},
+              "travel_mode" => "DRIVING"
+            },
+            %{
+              "distance" => %{"text" => "0.2 mi", "value" => 311},
+              "duration" => %{"text" => "1 min", "value" => 33},
+              "end_location" => %{"lat" => 40.0291125, "lng" => -83.0654844},
+              "html_instructions" => "Turn <b>right</b> onto <b>Fishinger Rd</b>",
+              "maneuver" => "turn-right",
+              "polyline" => %{"points" => "}eisF`m_zNDqCBcCP{HBgC"},
+              "start_location" => %{"lat" => 40.0292677, "lng" => -83.0691265},
+              "travel_mode" => "DRIVING"
+            },
+            %{
+              "distance" => %{"text" => "2.4 mi", "value" => 3885},
+              "duration" => %{"text" => "6 mins", "value" => 369},
+              "end_location" => %{"lat" => 40.0639293, "lng" => -83.0664924},
+              "html_instructions" => "Turn <b>left</b> onto <b>Reed Rd</b><div style=\"font-size:0.9em\">Pass by the gas station (on the left in 1.8 mi)</div>",
+              "maneuver" => "turn-left",
+              "polyline" => %{
+                "points" => "}disFfv~yNi@?a@AO?K@I@I@KDcBb@]HSDWF{@RgD|@}Bl@a@FOBO@O@A?M@O@YBgB?uE@qADI?q@AaBBaG@yB@}HDoBB_C@kB@oC@sD@_C@kB@O?w@@s@@S?}CBiA@eA@oC?u@?qBBwC@{DBoC@wC@k@?mA@w@?i@@Q?G?i@@iA@e@AsA?S?K?oA?W?iAA_@Aq@A}@AUA]?oBEeBAC?S?qCEw@Aa@?_CCi@?k@?YAo@C]?mBE}CKA?_@?yAA_@AG?}AEMCO@i@Ac@AI?_@Ca@A]AE?k@Aa@Am@A[?UC"
+              },
+              "start_location" => %{"lat" => 40.0291125, "lng" => -83.0654844},
+              "travel_mode" => "DRIVING"
+            },
+            %{
+              "distance" => %{"text" => "0.4 mi", "value" => 605},
+              "duration" => %{"text" => "1 min", "value" => 41},
+              "end_location" => %{"lat" => 40.0637417, "lng" => -83.0593973},
+              "html_instructions" => "Turn <b>right</b> onto <b>Bethel Rd</b>",
+              "maneuver" => "turn-right",
+              "polyline" => %{
+                "points" => "q~osFp|~yN@m@?Q@s@@aA@y@@u@@s@?uA@}A?SBwA?]@_A@[?w@@i@EWBcB@u@@e@?Y@a@BuA?Y@S?i@@aA@o@"
+              },
+              "start_location" => %{"lat" => 40.0639293, "lng" => -83.0664924},
+              "travel_mode" => "DRIVING"
+            },
+            %{
+              "distance" => %{"text" => "102 ft", "value" => 31},
+              "duration" => %{"text" => "1 min", "value" => 15},
+              "end_location" => %{"lat" => 40.0640199, "lng" => -83.0593777},
+              "html_instructions" => "Turn <b>left</b>",
+              "maneuver" => "turn-left",
+              "polyline" => %{"points" => "k}osFfp}yNWA_@A"},
+              "start_location" => %{"lat" => 40.0637417, "lng" => -83.0593973},
+              "travel_mode" => "DRIVING"
+            },
+            %{
+              "distance" => %{"text" => "190 ft", "value" => 58},
+              "duration" => %{"text" => "1 min", "value" => 25},
+              "end_location" => %{"lat" => 40.0640381, "lng" => -83.0600576},
+              "html_instructions" => "Turn <b>left</b>",
+              "maneuver" => "turn-left",
+              "polyline" => %{"points" => "c_psFbp}yNAr@?f@Aj@"},
+              "start_location" => %{"lat" => 40.0640199, "lng" => -83.0593777},
+              "travel_mode" => "DRIVING"
+            },
+            %{
+              "distance" => %{"text" => "341 ft", "value" => 104},
+              "duration" => %{"text" => "1 min", "value" => 52},
+              "end_location" => %{"lat" => 40.064974, "lng" => -83.0600035},
+              "html_instructions" => "Turn <b>right</b><div style=\"font-size:0.9em\">Destination will be on the left</div>",
+              "maneuver" => "turn-right",
+              "polyline" => %{"points" => "g_psFjt}yNyDK"},
+              "start_location" => %{"lat" => 40.0640381, "lng" => -83.0600576},
+              "travel_mode" => "DRIVING"
+            }
+          ],
+          "traffic_speed_entry" => [],
+          "via_waypoint" => []
+        }
+      ],
+      "overview_polyline" => %{
+        "points" => "a`fsFt`_zNADQJQLMX^ZFPANIVQXv@r@`@f@bA`ABDBZGfFaEKsDImDG}GQsLYo_@_Aq]y@wAADqCT_MBgCi@?q@Ak@JaCl@k@LcFpA_Dt@q@F]BaCBuE@qAD{@A{WLoFD{FBoLD}GFk\\NmKDsBByBAgC?cNQaFGwFCuEK_DKyBAg@AkBIgBAeBGwCEUC@m@@eAFeFHqM@i@EWDyCFwDByC@o@WA_@AAr@ArAyDK"
+      },
+      "summary" => "Redding Rd and Reed Rd",
+      "warnings" => [],
+      "waypoint_order" => []
+    }
+  ],
+  "status" => "OK"
+}
+

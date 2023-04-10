@@ -3,7 +3,7 @@ defmodule QuickestRoute.Search.GoogleTest do
   doctest QuickestRoute.Search.Google
   alias QuickestRoute.Search.Google
 
-  describe "get_url/3" do
+  describe "get_direction_url/3" do
     test "creates url properly" do
       from = "from"
       original = "original_to"
@@ -13,7 +13,7 @@ defmodule QuickestRoute.Search.GoogleTest do
       expected =
         "https://maps.googleapis.com/maps/api/directions/json?origin=from&destination=ghi&key=jkl"
 
-      assert {"original_to", expected} == Google.get_url(from, {original, to}, api_key)
+      assert {"original_to", expected} == Google.get_direction_url(from, {original, to}, api_key)
     end
   end
 end
