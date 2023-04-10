@@ -1,0 +1,11 @@
+<h1> RESULTS </h1>
+
+<table>
+  <%= for {address, minutes} <- @response do %>
+    <tr>
+      <td><%= minutes %> minutes to <%= address %></td>
+    </tr>
+  <% end %>
+</table>
+
+<%= link "Search Again!!!", to: Routes.search_path(@conn, :new) %>

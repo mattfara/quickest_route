@@ -1,0 +1,14 @@
+<h1> SEARCH!!!! </h1>
+
+<%= form_for @changeset, Routes.search_path(@conn, :run), fn f ->  %>
+  <div>
+    <%= text_input f, :from, placeholder: "From...." %>
+  </div>
+
+  <div>
+    <%= array_input f, :to %>
+    <%= array_add_button f, :to %>
+  </div>
+
+  <%= submit "Run Search" %>
+<% end%>
