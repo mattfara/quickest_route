@@ -1,5 +1,8 @@
 [
-  QuickestRoute.Search.Google
+  QuickestRoute.Search.ApiCaller,
+  QuickestRoute.Search.Google,
+
+
 ]
 |> Enum.each(&Mimic.copy(&1))
 

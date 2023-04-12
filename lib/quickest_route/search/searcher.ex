@@ -10,6 +10,7 @@ defmodule QuickestRoute.Search.Searcher do
       UrlHelpers.space_to(input, "+")
     }
 
+  ## TODO rename and move into Google module
   defp parse(
          {:ok,
           {original,
@@ -22,6 +23,7 @@ defmodule QuickestRoute.Search.Searcher do
          |> StringHelpers.parse_integer(@not_found)
          |> then(&{original, &1})
 
+  ## TODO rename and move into Google module
   defp parse({:ok, {original, _json}}),
     do: {original, @not_found}
 
