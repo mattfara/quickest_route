@@ -12,7 +12,11 @@ defmodule QuickestRouteWeb.SearchController do
     form = Search.form(params)
 
     with {:ok, attributes} <- Search.attributes(form),
-         {:ok, response} <- Search.search(attributes),
+          ##TODO - need to work out how to deal with unrefined results and multiple results
+          ## probably use the `else` to drive some view behavior
+          ## ask user to try another input or select from the choices, respectively
+         {:ok, parameters} <- Search.refine(attributes),
+         {:ok, response} <- Search.search(parameters),
          do:
            conn
            |> put_flash(:info, "Search submitted!")
