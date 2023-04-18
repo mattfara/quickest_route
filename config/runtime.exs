@@ -26,8 +26,7 @@ google_api_key =
     env variable GOOGLE_API_KEY missing!
     """
 
-config :quickest_route, QuickestRoute.Search.Google,
-  google_api_key: google_api_key
+config :quickest_route, QuickestRoute.Search.Google, google_api_key: google_api_key
 
 if config_env() == :prod do
   database_url =

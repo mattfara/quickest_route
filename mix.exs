@@ -46,6 +46,7 @@ defmodule QuickestRoute.MixProject do
       {:jason, "~> 1.2"},
       {:plug_cowboy, "~> 2.5"},
       {:httpoison, "~> 2.0"},
+      {:struct_access, "~> 1.1.2"},
       # dev and test
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
       # dev

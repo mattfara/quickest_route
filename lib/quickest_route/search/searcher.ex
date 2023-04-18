@@ -1,39 +1,31 @@
 defmodule QuickestRoute.Search.Searcher do
-  alias QuickestRoute.Search.Google
-  alias QuickestRoute.{StringHelpers, UrlHelpers}
+  alias QuickestRoute.Search.{ApiCaller, Google, Place}
 
-  @not_found "?"
 
-  defp prepare_to(input),
-    do: {
-      input,
-      UrlHelpers.space_to(input, "+")
-    }
-
-  defp parse(
-         {:ok,
-          {original,
-           %{"status" => "OK", "routes" => [%{"legs" => [%{"duration" => %{"text" => text}}]}]}}}
-       ),
-       do:
-         text
-         |> String.split(" ")
-         |> List.first()
-         |> StringHelpers.parse_integer(@not_found)
-         |> then(&{original, &1})
-
-  defp parse({:ok, {original, _json}}),
-    do: {original, @not_found}
-
-  def search(%{changes: %{from: from, to: [_ | _] = to}}) do
-    from = UrlHelpers.space_to(from, "+")
-
+  def search(
+        %{
+          from: %Place{refined: [%{"place_id" => from_id}]},
+          to: [_ | _] = to
+        },
+        api_key
+      ) do
     to
-    |> Stream.map(&String.trim(&1))
-    |> Stream.map(&prepare_to(&1))
-    |> Stream.map(&Google.get_url(from, &1, Google.get_api_key()))
-    |> Task.async_stream(&Google.call_api(&1))
-    |> Stream.map(&parse(&1))
-    |> Enum.sort_by(fn {_, mins} -> mins end)
+    |> Stream.map(&Google.get_direction_url(from_id, &1, api_key))
+    |> Task.async_stream(&get_directions(&1))
+    |> Stream.map(&Google.parse_directions(&1))
+    |> Enum.sort_by(fn place -> place.duration end)
+    #TODO-  eventually should have the view parse a Place
+    # rather than using this tuple
+    |> Enum.map(
+      &{
+        get_place_name(&1),
+        &1.duration
+      }
+    )
   end
+
+  def get_directions(%Place{direction_url: url} = place),
+    do: Map.put(place, :directions, ApiCaller.call(url))
+
+  def get_place_name(%Place{refined: [%{"name" => name}]}), do: name
 end
