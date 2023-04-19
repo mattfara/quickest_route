@@ -2,20 +2,20 @@
 
 <%= form_for @changeset, Routes.search_path(@conn, :run), fn f ->  %>
   <section class="row">
-  <article class="column">
-  <h3>From...</h3>
-  <div>
-    <%= text_input f, :from, placeholder: "From...." %>
-  </div>
-  </article>
+    <article class="column">
+      <h3>From...</h3>
+      <div>
+        <%= text_input f, :from, placeholder: "From...." %>
+      </div>
+    </article>
 
-  <article class="column">
-  <h3>To...</h3>
-  <div>
-    <%= array_input f, :to %>
-    <%= array_add_button f, :to %>
-  </div>
-  </article>
+    <article class="column">
+      <h3>To...</h3>
+      <div>
+        <%= array_input f, :to %>
+        <%= array_add_button f, :to %>
+      </div>
+    </article>
   </section>
 
   <%= submit "Run Search" %>
