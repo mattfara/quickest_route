@@ -1,14 +1,22 @@
-<h1> SEARCH!!!! </h1>
+<h1>Quickest Route</h1>
 
 <%= form_for @changeset, Routes.search_path(@conn, :run), fn f ->  %>
-  <div>
-    <%= text_input f, :from, placeholder: "From...." %>
-  </div>
+  <section class="row">
+    <article class="column">
+      <h3>From...</h3>
+      <div>
+        <%= text_input f, :from, placeholder: "From...." %>
+      </div>
+    </article>
 
-  <div>
-    <%= array_input f, :to %>
-    <%= array_add_button f, :to %>
-  </div>
+    <article class="column">
+      <h3>To...</h3>
+      <div>
+        <%= array_input f, :to %>
+        <%= array_add_button f, :to %>
+      </div>
+    </article>
+  </section>
 
   <%= submit "Run Search" %>
 <% end%>

@@ -1,7 +1,6 @@
 defmodule QuickestRoute.Search.Searcher do
   alias QuickestRoute.Search.{ApiCaller, Google, Place}
 
-
   def search(
         %{
           from: %Place{refined: [%{"place_id" => from_id}]},
@@ -14,7 +13,7 @@ defmodule QuickestRoute.Search.Searcher do
     |> Task.async_stream(&get_directions(&1))
     |> Stream.map(&Google.parse_directions(&1))
     |> Enum.sort_by(fn place -> place.duration end)
-    #TODO-  eventually should have the view parse a Place
+    # TODO-  eventually should have the view parse a Place
     # rather than using this tuple
     |> Enum.map(
       &{

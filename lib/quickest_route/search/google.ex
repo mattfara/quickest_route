@@ -48,14 +48,14 @@ defmodule QuickestRoute.Search.Google do
   def get_api_key, do: Application.get_env(:quickest_route, __MODULE__)[:google_api_key]
 
   def parse_directions(
-         {:ok,
-          %Place{
-            directions: %{
-              "status" => "OK",
-              "routes" => [%{"legs" => [%{"duration" => %{"text" => text}}]}]
-            }
-          } = to_place}
-       ) do
+        {:ok,
+         %Place{
+           directions: %{
+             "status" => "OK",
+             "routes" => [%{"legs" => [%{"duration" => %{"text" => text}}]}]
+           }
+         } = to_place}
+      ) do
     text
     |> String.split(" ")
     |> List.first()
@@ -66,5 +66,4 @@ defmodule QuickestRoute.Search.Google do
 
   def parse_directions({:ok, place}),
     do: Map.put(place, :duration, @not_found)
-
 end

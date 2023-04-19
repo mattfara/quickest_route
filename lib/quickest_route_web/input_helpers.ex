@@ -16,7 +16,7 @@ defmodule QuickestRouteWeb.InputHelpers do
     id = Phoenix.HTML.Form.input_id(form, field) <> "_container"
     values = Phoenix.HTML.Form.input_value(form, field) || [""]
 
-    content_tag :ol, id: id, class: "input_container" do
+    content_tag :ul, id: id, class: "input_container", style: "list-style:none" do
       for {value, i} <- Enum.with_index(values) do
         input_opts = [
           value: value,
