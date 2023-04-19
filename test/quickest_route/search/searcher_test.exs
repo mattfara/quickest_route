@@ -49,6 +49,5 @@ defmodule QuickestRoute.Search.SearcherTest do
 
       assert [{"name2", 15}, {"name1", "?"}] = Searcher.search(data, api_key)
     end
-
   end
 end
