@@ -9,15 +9,26 @@ defmodule QuickestRoute.Search.Google do
   @not_found "?"
 
   ## TODO - maybe return the url in a tuple or map so we don't pollute the struct with unnecessary info
+  ## TODO - maybe better to pass in something like a SearchRequest object which stores the from
+  ## and the departure time, etc
   def get_direction_url(
         from_id,
         %Place{refined: [%{"place_id" => to_id} | _]} = to_place,
-        api_key
+        api_key,
+        departure_time
       ) do
+    ## TODO - don't want to waste API $$ by including departure_time when it isn't needed
+    url =
+      if departure_time == "now" do
+        "https://maps.googleapis.com/maps/api/directions/json?origin=place_id:#{from_id}&destination=place_id:#{to_id}&key=#{api_key}"
+      else
+        "https://maps.googleapis.com/maps/api/directions/json?departure_time=#{departure_time}&origin=place_id:#{from_id}&destination=place_id:#{to_id}&key=#{api_key}"
+      end
+
     Map.put(
       to_place,
       :direction_url,
-      "https://maps.googleapis.com/maps/api/directions/json?origin=place_id:#{from_id}&destination=place_id:#{to_id}&key=#{api_key}"
+      url
     )
   end
 
@@ -52,11 +63,17 @@ defmodule QuickestRoute.Search.Google do
          %Place{
            directions: %{
              "status" => "OK",
-             "routes" => [%{"legs" => [%{"duration" => %{"text" => text}}]}]
+             "routes" => [%{"legs" => [%{"duration" => %{"text" => text}}] = leg_info}]
            }
          } = to_place}
       ) do
-    text
+    duration_string =
+      leg_info
+      |> List.first()
+      |> get_in(["duration_in_traffic", "text"]) ||
+        text
+
+    duration_string
     |> String.split(" ")
     |> List.first()
     ## TODO pass in an option here for the not found for clarity

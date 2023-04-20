@@ -5,7 +5,13 @@
     <article class="column">
       <h3>From...</h3>
       <div>
-        <%= text_input f, :from, placeholder: "From...." %>
+        <%= text_input f, :from %>
+        <div>
+        <label>Departure time</label>
+        <%= datetime_local_input f, :departure_time %>
+        <p>Leave blank for "now"</p>
+        <!-- consider a checkbox which if checked will remove the input field altogether -->
+        </div>
       </div>
     </article>
 

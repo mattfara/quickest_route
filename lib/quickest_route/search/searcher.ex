@@ -4,12 +4,13 @@ defmodule QuickestRoute.Search.Searcher do
   def search(
         %{
           from: %Place{refined: [%{"place_id" => from_id}]},
-          to: [_ | _] = to
+          to: [_ | _] = to,
+          departure_time: departure_time
         },
         api_key
       ) do
     to
-    |> Stream.map(&Google.get_direction_url(from_id, &1, api_key))
+    |> Stream.map(&Google.get_direction_url(from_id, &1, api_key, departure_time))
     |> Task.async_stream(&get_directions(&1))
     |> Stream.map(&Google.parse_directions(&1))
     |> Enum.sort_by(fn place -> place.duration end)

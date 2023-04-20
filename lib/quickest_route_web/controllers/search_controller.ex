@@ -9,14 +9,12 @@ defmodule QuickestRouteWeb.SearchController do
   end
 
   def run(conn, %{"parameters" => params}) do
-    form = Search.form(params)
-
-    with {:ok, attributes} <- Search.attributes(form),
+    with {:ok, validated_params} <- Search.validate(params),
          ## TODO - need to work out how to deal with unrefined results and multiple results
          ## probably use the `else` to drive some view behavior
          ## ask user to try another input or select from the choices, respectively
-         {:ok, parameters} <- Search.refine(attributes),
-         {:ok, response} <- Search.search(parameters),
+         {:ok, refined_params} <- Search.refine(validated_params),
+         {:ok, response} <- Search.search(refined_params),
          do:
            conn
            |> put_flash(:info, "Search submitted!")

@@ -12,7 +12,8 @@ defmodule QuickestRoute.Search.SearcherTest do
          to: [
            %Place{refined: [%{"name" => "name1", "place_id" => "456"}]},
            %Place{refined: [%{"name" => "name2", "place_id" => "789"}]}
-         ]
+         ],
+         departure_time: "now"
        },
        api_key: "abc",
        responses: %{
