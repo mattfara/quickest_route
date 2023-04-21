@@ -22,6 +22,9 @@ defmodule QuickestRouteWeb.SearchController do
   end
 
   def show(conn, response) do
-    render(conn, "show.html", response: response)
+    # surprised to learn that the order of the list in the response
+    # is not preserved in the redirect
+    sorted = Enum.sort_by(response, fn {_name, duration} -> duration end)
+    render(conn, "show.html", response: sorted)
   end
 end
