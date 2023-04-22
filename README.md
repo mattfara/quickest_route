@@ -15,8 +15,7 @@ and check the results one-by-one.
 
 ## Todo
 
-* A user may not want to enter the full address of a destination. Google's Place API  would allow a user to use shorthand, like "The New York Public Library". This will also yield such a location's `place_id`, which
-can improve the accuracy of trip durations in Google's Directions API.
 * This should be containerized to facilitate deployment with a service like Fly.io
-* The front page should be updated to be the search page
 * Generally the search and results pages should look better
+* Should have a limit on the number of alternative destinations
+* Should make a third input for a fixed final destination
