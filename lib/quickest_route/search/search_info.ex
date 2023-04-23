@@ -23,21 +23,6 @@ defmodule QuickestRoute.Search.SearchInfo do
           ]
         }
 
-  ## TODO - delete
-  @moduledoc """
-  [
-    [
-      {place_1, place_2, duration},
-      {place_2, place_4, duration}
-    ],
-    [
-       # etc
-      {place_1, place_3, duration}
-      {place_3, place_4, duration}
-    ]
-  ]
-  """
-
   def init(%{from: from, to: to, departure_time: departure_time}) do
     {:ok,
      %SearchInfo{

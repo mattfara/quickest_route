@@ -14,8 +14,6 @@ defmodule QuickestRoute.Search.Searcher do
       |> Stream.map(&Google.get_direction_url(from_id, &1, api_key, departure_time))
       |> Task.async_stream(&get_directions(&1))
       |> Stream.map(&Google.parse_directions(&1))
-      # TODO-  eventually should have the view parse a Place
-      # rather than using this tuple
       |> Enum.map(
         &{
           origin,

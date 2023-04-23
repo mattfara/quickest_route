@@ -21,7 +21,7 @@ defmodule QuickestRouteWeb.Router do
     get "/users", UserController, :index
     get "/search/new", SearchController, :new
     post "/search", SearchController, :run
-    get "/search_result", SearchController, :show
+    post "/search_result", SearchController, :show
     get "/users/:id", UserController, :show
     get "/", PageController, :index
   end

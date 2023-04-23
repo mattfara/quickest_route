@@ -8,17 +8,12 @@ defmodule QuickestRoute.Search.Google do
 
   @not_found "?"
 
-  ## TODO - maybe return the url in a tuple or map so we don't pollute the struct with unnecessary info
-  ## TODO - maybe better to pass in something like a SearchRequest object which stores the from
-  ## and the departure time, etc
-
   def get_direction_url(
         from_id,
         %Place{refined: [%{"place_id" => to_id} | _]} = to_place,
         api_key,
         departure_time
       ) do
-    ## TODO - don't want to waste API $$ by including departure_time when it isn't needed
     url =
       if departure_time == "now" do
         "https://maps.googleapis.com/maps/api/directions/json?origin=place_id:#{from_id}&destination=place_id:#{to_id}&key=#{api_key}"
@@ -26,7 +21,6 @@ defmodule QuickestRoute.Search.Google do
         "https://maps.googleapis.com/maps/api/directions/json?departure_time=#{departure_time}&origin=place_id:#{from_id}&destination=place_id:#{to_id}&key=#{api_key}"
       end
 
-    # intermediate to carry transient info
     %{
       alternative: to_place,
       direction_url: url
