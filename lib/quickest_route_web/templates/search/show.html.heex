@@ -1,9 +1,9 @@
 <h1> RESULTS </h1>
 
 <table>
-  <%= for {address, minutes} <- @response do %>
+  <%= for {_origin, alt, minutes} <- @response do %>
     <tr>
-      <td><%= minutes %> minutes to <%= address %></td>
+      <td><%= minutes %> minutes to <%= get_place_name(alt) %></td>
     </tr>
   <% end %>
 </table>

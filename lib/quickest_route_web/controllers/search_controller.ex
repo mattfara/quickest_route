@@ -10,21 +10,20 @@ defmodule QuickestRouteWeb.SearchController do
 
   def run(conn, %{"parameters" => params}) do
     with {:ok, validated_params} <- Search.validate(params),
+         {:ok, search_info} <- Search.convert(validated_params),
          ## TODO - need to work out how to deal with unrefined results and multiple results
          ## probably use the `else` to drive some view behavior
          ## ask user to try another input or select from the choices, respectively
-         {:ok, refined_params} <- Search.refine(validated_params),
-         {:ok, response} <- Search.search(refined_params),
-         do:
-           conn
-           |> put_flash(:info, "Search submitted!")
-           |> redirect(to: Routes.search_path(conn, :show, response))
+         {:ok, refined_params} <- Search.refine(search_info),
+         {:ok, completed_search} <- Search.search(refined_params) do
+
+    sorted = Enum.sort_by(
+      completed_search.durations,
+      fn {_origin, _alternative, duration} -> duration end
+    )
+
+    render(conn, "show.html", response: sorted)
+    end
   end
 
-  def show(conn, response) do
-    # surprised to learn that the order of the list in the response
-    # is not preserved in the redirect
-    sorted = Enum.sort_by(response, fn {_name, duration} -> duration end)
-    render(conn, "show.html", response: sorted)
-  end
 end
