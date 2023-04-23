@@ -11,6 +11,7 @@ defmodule QuickestRoute.Search.Google do
   ## TODO - maybe return the url in a tuple or map so we don't pollute the struct with unnecessary info
   ## TODO - maybe better to pass in something like a SearchRequest object which stores the from
   ## and the departure time, etc
+
   def get_direction_url(
         from_id,
         %Place{refined: [%{"place_id" => to_id} | _]} = to_place,
@@ -25,11 +26,11 @@ defmodule QuickestRoute.Search.Google do
         "https://maps.googleapis.com/maps/api/directions/json?departure_time=#{departure_time}&origin=place_id:#{from_id}&destination=place_id:#{to_id}&key=#{api_key}"
       end
 
-    Map.put(
-      to_place,
-      :direction_url,
-      url
-    )
+    # intermediate to carry transient info
+    %{
+      alternative: to_place,
+      direction_url: url
+    }
   end
 
   @doc """
@@ -60,12 +61,12 @@ defmodule QuickestRoute.Search.Google do
 
   def parse_directions(
         {:ok,
-         %Place{
+         %{
            directions: %{
              "status" => "OK",
              "routes" => [%{"legs" => [%{"duration" => %{"text" => text}}] = leg_info}]
            }
-         } = to_place}
+         } = intermediate}
       ) do
     duration_string =
       leg_info
@@ -78,7 +79,7 @@ defmodule QuickestRoute.Search.Google do
     |> List.first()
     ## TODO pass in an option here for the not found for clarity
     |> StringHelpers.parse_integer(@not_found)
-    |> then(&Map.put(to_place, :duration, &1))
+    |> then(&Map.put(intermediate, :duration, &1))
   end
 
   def parse_directions({:ok, place}),

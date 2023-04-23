@@ -1,8 +1,8 @@
 defmodule QuickestRoute.Search do
-  alias QuickestRoute.Search.{Google, Parameters, Searcher}
+  alias QuickestRoute.Search.{Google, Parameters, Searcher, SearchInfo}
 
-  def search(params \\ %{}) do
-    params
+  def search(search_info) do
+    search_info
     |> Searcher.search(Google.get_api_key())
     |> then(&{:ok, &1})
   end
@@ -23,13 +23,18 @@ defmodule QuickestRoute.Search do
     end
   end
 
-  def refine(%{from: from, to: to, departure_time: departure_time}) do
+  def convert(validated_params) do
+    SearchInfo.init(validated_params)
+  end
+
+  def refine(%SearchInfo{origin: from, alternatives: to, departure_time: departure_time}) do
     api_key = Google.get_api_key()
 
     {:ok,
-     %{
-       from: Google.refine_place(from, api_key),
-       to: Enum.reduce(to, [], fn x, acc -> [Google.refine_place(x, api_key) | acc] end),
+     %SearchInfo{
+       origin: Google.refine_place(from, api_key),
+       alternatives:
+         Enum.reduce(to, [], fn x, acc -> [Google.refine_place(x, api_key) | acc] end),
        departure_time: departure_time
      }}
   end

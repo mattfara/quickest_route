@@ -1,9 +1,9 @@
 <h1> RESULTS </h1>
 
 <table>
-  <%= for {address, minutes} <- @response do %>
+  <%= for {name, minutes} <- @response do %>
     <tr>
-      <td><%= minutes %> minutes to <%= address %></td>
+      <td><%= minutes %> minutes to <%= name %></td>
     </tr>
   <% end %>
 </table>
