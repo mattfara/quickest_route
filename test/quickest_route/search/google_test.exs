@@ -13,7 +13,7 @@ defmodule QuickestRoute.Search.GoogleTest do
       expected =
         "https://maps.googleapis.com/maps/api/directions/json?origin=place_id:from&destination=place_id:ghi&key=jkl"
 
-      assert Map.put(to_place, :direction_url, expected) ==
+      assert %{alternative: to_place, direction_url: expected} ==
                Google.get_direction_url(from_place_id, to_place, api_key, "now")
     end
 
@@ -25,7 +25,7 @@ defmodule QuickestRoute.Search.GoogleTest do
       expected =
         "https://maps.googleapis.com/maps/api/directions/json?departure_time=2023-04-20T15:02&origin=place_id:from&destination=place_id:ghi&key=jkl"
 
-      assert Map.put(to_place, :direction_url, expected) ==
+      assert %{alternative: to_place, direction_url: expected} ==
                Google.get_direction_url(from_place_id, to_place, api_key, "2023-04-20T15:02")
     end
   end
