@@ -1,7 +1,8 @@
 defmodule QuickestRoute.Search.SearchInfo do
-  use StructAccess
+  @moduledoc """
+  Gathers fields during search for trip durations
+  """
 
-  alias __MODULE__
   alias QuickestRoute.Search.Place
 
   defstruct [
@@ -15,7 +16,7 @@ defmodule QuickestRoute.Search.SearchInfo do
 
   @type t :: %__MODULE__{
           origin: Place.t(),
-          alternatives: [Place.t()],
+          alternatives: list(Place.t()),
           departure_time: String.t(),
           # final_destination: Place.t() | nil,
           durations: [
@@ -23,12 +24,11 @@ defmodule QuickestRoute.Search.SearchInfo do
           ]
         }
 
-  def init(%{from: from, to: to, departure_time: departure_time}) do
-    {:ok,
-     %SearchInfo{
-       origin: from,
-       alternatives: to,
-       departure_time: departure_time
-     }}
+  def init(%{from: from, to: [_ | _] = to, departure_time: departure_time}) do
+    %__MODULE__{
+      origin: from,
+      alternatives: to,
+      departure_time: departure_time
+    }
   end
 end

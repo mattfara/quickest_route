@@ -1,6 +1,4 @@
 defmodule QuickestRoute.Search.Place do
-  use StructAccess
-
   defstruct [
     :status,
     :original,

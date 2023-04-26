@@ -1,8 +1,10 @@
 defmodule QuickestRoute.StringHelpers do
   @integer ~r/^[1-9]\d*$/
-  def parse_integer(x, not_int) when is_binary(x) and is_binary(not_int) do
-    if Regex.match?(@integer, x) do
-      String.to_integer(x)
+
+  @spec parse_integer(binary, [{:fallback, binary}, ...]) :: any()
+  def parse_integer(str, fallback: not_int) when is_binary(str) do
+    if Regex.match?(@integer, str) do
+      String.to_integer(str)
     else
       not_int
     end

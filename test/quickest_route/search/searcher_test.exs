@@ -32,7 +32,10 @@ defmodule QuickestRoute.Search.SearcherTest do
     } do
       expect(ApiCaller, :call, 2, fn _url -> responses.ok end)
 
-      assert Map.put(data, :durations, [{data.origin, List.first(data.alternatives), 15}, {data.origin, Enum.at(data.alternatives, 1), 15}]) == Searcher.search(data, api_key)
+      assert Map.put(data, :durations, [
+               {data.origin, List.first(data.alternatives), 15},
+               {data.origin, Enum.at(data.alternatives, 1), 15}
+             ]) == Searcher.search(data, api_key)
     end
 
     test "Successfully parses a non-200 response", %{
@@ -48,7 +51,10 @@ defmodule QuickestRoute.Search.SearcherTest do
         end
       end)
 
-      assert Map.put(data, :durations, [{data.origin, List.first(data.alternatives), "?"}, {data.origin, Enum.at(data.alternatives, 1), 15}]) == Searcher.search(data, api_key)
+      assert Map.put(data, :durations, [
+               {data.origin, List.first(data.alternatives), "?"},
+               {data.origin, Enum.at(data.alternatives, 1), 15}
+             ]) == Searcher.search(data, api_key)
     end
   end
 end

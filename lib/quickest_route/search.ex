@@ -1,4 +1,7 @@
 defmodule QuickestRoute.Search do
+  @moduledoc """
+  Defines search context
+  """
   alias QuickestRoute.Search.{Google, Parameters, Searcher, SearchInfo}
 
   def search(search_info) do
@@ -7,26 +10,16 @@ defmodule QuickestRoute.Search do
     |> then(&{:ok, &1})
   end
 
+  @doc """
+  Supplies an empty form for view
+  """
   def form, do: Parameters.form()
-  def form(form), do: Parameters.form(form)
-  def attributes(form), do: Parameters.attributes(form)
 
-  def validate(form) do
-    form
-    |> Parameters.changeset()
-    |> case do
-      %{valid?: true, changes: changes, data: %{departure_time: departure_time}} ->
-        {:ok, Map.put(changes, :departure_time, departure_time)}
+  def validate(params), do: Parameters.validate(params)
 
-      changeset ->
-        {:error, changeset}
-    end
-  end
+  def convert(validated_params), do: {:ok, SearchInfo.init(validated_params)}
 
-  def convert(validated_params) do
-    SearchInfo.init(validated_params)
-  end
-
+  # @spec refine(SearchInfo.t()) :: SearchInfo.t()
   def refine(%SearchInfo{origin: from, alternatives: to, departure_time: departure_time}) do
     api_key = Google.get_api_key()
 
