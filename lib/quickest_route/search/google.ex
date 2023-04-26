@@ -12,47 +12,57 @@ defmodule QuickestRoute.Search.Google do
         from_id,
         %Place{refined: [%{"place_id" => to_id} | _]} = to_place,
         api_key,
-        departure_time
+        "now"
       ) do
-    url =
-      if departure_time == "now" do
-        "https://maps.googleapis.com/maps/api/directions/json?origin=place_id:#{from_id}&destination=place_id:#{to_id}&key=#{api_key}"
-      else
-        "https://maps.googleapis.com/maps/api/directions/json?departure_time=#{departure_time}&origin=place_id:#{from_id}&destination=place_id:#{to_id}&key=#{api_key}"
-      end
-
     %{
       alternative: to_place,
-      direction_url: url
+      direction_url:
+        "https://maps.googleapis.com/maps/api/directions/json?origin=place_id:#{from_id}&destination=place_id:#{to_id}&key=#{api_key}"
+    }
+  end
+
+  def get_direction_url(
+        from_id,
+        %Place{refined: [%{"place_id" => to_id} | _]} = to_place,
+        api_key,
+        departure_time
+      ) do
+    %{
+      alternative: to_place,
+      direction_url:
+        "https://maps.googleapis.com/maps/api/directions/json?departure_time=#{departure_time}&origin=place_id:#{from_id}&destination=place_id:#{to_id}&key=#{api_key}"
     }
   end
 
   @doc """
   Retrieves the official name and `place_id` for user input
   """
-  def refine_place(place, api_key),
+  def refine_place(user_place_name, api_key),
     do:
-      place
+      user_place_name
       |> get_place_url(api_key)
       |> ApiCaller.call()
-      |> parse_place_json(place)
+      |> parse_place_json(user_place_name)
 
-  def parse_place_json(%{"status" => "OK", "candidates" => candidates}, place),
+  defp parse_place_json(%{"status" => "OK", "candidates" => candidates}, place),
     do: %Place{status: :ok, original: place, refined: candidates}
 
-  def parse_place_json(_, place),
+  defp parse_place_json(_, place),
     do: %Place{
       status: :error,
       original: place,
       error_message: "Unable to refine place \"#{place}\" for search"
     }
 
+  @spec get_place_url(place :: String.t(), api_key :: String.t()) :: String.t()
   def get_place_url(place, api_key),
     do:
       "https://maps.googleapis.com/maps/api/place/findplacefromtext/json?fields=name%2Cplace_id&input=#{URI.encode(place)}&inputtype=textquery&key=#{api_key}"
 
+  @spec get_api_key() :: String.t()
   def get_api_key, do: Application.get_env(:quickest_route, __MODULE__)[:google_api_key]
 
+  @spec parse_directions({:ok, map()}) :: map()
   def parse_directions(
         {:ok,
          %{
@@ -71,8 +81,7 @@ defmodule QuickestRoute.Search.Google do
     duration_string
     |> String.split(" ")
     |> List.first()
-    ## TODO pass in an option here for the not found for clarity
-    |> StringHelpers.parse_integer(@not_found)
+    |> StringHelpers.parse_integer(fallback: @not_found)
     |> then(&Map.put(intermediate, :duration, &1))
   end
 

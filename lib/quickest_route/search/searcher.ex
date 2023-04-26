@@ -1,4 +1,7 @@
 defmodule QuickestRoute.Search.Searcher do
+  @moduledoc """
+  Searches for trip durations to alternative locations
+  """
   alias QuickestRoute.Search.{ApiCaller, Google, Place, SearchInfo}
 
   def search(
@@ -25,8 +28,6 @@ defmodule QuickestRoute.Search.Searcher do
     Map.put(search_info, :durations, durations)
   end
 
-  def get_directions(%{direction_url: url} = intermediate),
+  defp get_directions(%{direction_url: url} = intermediate),
     do: Map.put(intermediate, :directions, ApiCaller.call(url))
-
-  def get_place_name(%{alternative: %Place{refined: [%{"name" => name}]}}), do: name
 end
