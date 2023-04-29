@@ -3,7 +3,7 @@
 <%= form_for @changeset, Routes.search_path(@conn, :run), fn f ->  %>
   <section class="row">
     <article class="column">
-      <h3>From...</h3>
+      <h3>Starting From...</h3>
       <div>
         <%= text_input f, :from %>
         <div>
@@ -20,6 +20,14 @@
       <div>
         <%= array_input f, :to %>
         <%= array_add_button f, :to %>
+      </div>
+    </article>
+    <article class="column">
+      <!-- TODO does VScode have anything for completing html tags??? -->
+      <h3>And Finally To...</h3>
+      <div>
+        <%= text_input f, :finally %>
+        <p>Leave blank if not needed</p>
       </div>
     </article>
   </section>
