@@ -7,13 +7,14 @@ defmodule QuickestRoute.Search.Parameters do
   import Ecto.Changeset
 
   @required [:from, :to, :departure_time]
-  @fields @required
+  @fields @required ++ [:finally]
   @primary_key false
 
   embedded_schema do
     field :from, :string
-    field :to, {:array, :string}
     field :departure_time, :string, default: "now"
+    field :to, {:array, :string}
+    field :finally, :string
   end
 
   @spec form :: Ecto.Changeset.t()
@@ -32,8 +33,8 @@ defmodule QuickestRoute.Search.Parameters do
     form
     |> changeset()
     |> case do
-      %{valid?: true, changes: changes, data: %{departure_time: departure_time}} ->
-        {:ok, Map.put(changes, :departure_time, departure_time)}
+      %{valid?: true, changes: changes, data: data} ->
+        {:ok, Map.merge(data, changes, fn _k, data_value, change_value -> change_value || data_value end)}
 
       changeset ->
         {:error, changeset}
