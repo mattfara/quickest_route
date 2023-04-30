@@ -20,15 +20,16 @@ defmodule QuickestRoute.Search do
   def convert(validated_params), do: {:ok, SearchInfo.init(validated_params)}
 
   # @spec refine(SearchInfo.t()) :: SearchInfo.t()
-  def refine(%SearchInfo{origin: from, alternatives: to, departure_time: departure_time}) do
+  def refine(%SearchInfo{origin: from, alternatives: [_ | _] = to, departure_time: departure_time, final_destination: final_destination}) do
     api_key = Google.get_api_key()
 
     {:ok,
      %SearchInfo{
        origin: Google.refine_place(from, api_key),
+       departure_time: departure_time,
        alternatives:
-         Enum.reduce(to, [], fn x, acc -> [Google.refine_place(x, api_key) | acc] end),
-       departure_time: departure_time
+         Enum.map(to, fn x -> Google.refine_place(x, api_key) end),
+       final_destination: Google.refine_place(final_destination, api_key)
      }}
   end
 end

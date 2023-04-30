@@ -7,28 +7,28 @@ defmodule QuickestRoute.Search.SearchInfo do
 
   defstruct [
     :origin,
-    :alternatives,
     :departure_time,
-    ## TODO add final destination later for
-    ## three-part search
+    :alternatives,
+    :final_destination,
     :durations
   ]
 
   @type t :: %__MODULE__{
           origin: Place.t(),
-          alternatives: list(Place.t()),
           departure_time: String.t(),
-          # final_destination: Place.t() | nil,
+          alternatives: list(Place.t()),
+          final_destination: Place.t(),
           durations: [
             tuple()
           ]
         }
 
-  def init(%{from: from, to: [_ | _] = to, departure_time: departure_time}) do
+  def init(%{from: from, to: [_ | _] = to, departure_time: departure_time, finally: finally}) do
     %__MODULE__{
       origin: from,
+      departure_time: departure_time,
       alternatives: to,
-      departure_time: departure_time
+      final_destination: finally
     }
   end
 end
