@@ -37,6 +37,7 @@ defmodule QuickestRoute.Search.Google do
   @doc """
   Retrieves the official name and `place_id` for user input
   """
+  def refine_place(nil, _api_key), do: nil
   def refine_place(user_place_name, api_key),
     do:
       user_place_name
