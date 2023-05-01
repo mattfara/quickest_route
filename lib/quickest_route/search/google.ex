@@ -9,18 +9,29 @@ defmodule QuickestRoute.Search.Google do
   @not_found "?"
 
   def get_direction_url(
-        from_id,
+        %SearchInfo{
+          origin: %Place{refined: [%{"place_id" => from_id}]} = origin,
+          alternatives: alternatives,
+          departure_time: departure_time,
+          final_destination: %Place{refined: [%{"place_id" => final_id}]} = final_destination,
+        } = search_info,
         %Place{refined: [%{"place_id" => to_id} | _]} = to_place,
         api_key,
-        "now"
       ) do
+      ## need to use a waypoint when there is a final destination: https://developers.google.com/maps/documentation/directions/get-directions#Waypoints
+      ## https://maps.googleapis.com/maps/api/directions/json
+  #?destination=Concord%2C%20MA
+  #&origin=Boston%2C%20MA
+  #&waypoints=via%3ACharlestown%2CMA%7Cvia%3ALexington%2CMA
+  #&key=YOUR_API_KEY
     %{
       alternative: to_place,
       direction_url:
         "https://maps.googleapis.com/maps/api/directions/json?origin=place_id:#{from_id}&destination=place_id:#{to_id}&key=#{api_key}"
     }
   end
-
+  ## thinking I should build the url from the pieces and parts I've got rather than have so many
+  ## over loads
   def get_direction_url(
         from_id,
         %Place{refined: [%{"place_id" => to_id} | _]} = to_place,
@@ -60,11 +71,9 @@ defmodule QuickestRoute.Search.Google do
     do:
       "https://maps.googleapis.com/maps/api/place/findplacefromtext/json?fields=name%2Cplace_id&input=#{URI.encode(place)}&inputtype=textquery&key=#{api_key}"
 
-  @spec get_api_key() :: String.t()
-  def get_api_key, do: Application.get_env(:quickest_route, __MODULE__)[:google_api_key]
 
-  @spec parse_directions({:ok, map()}) :: map()
-  def parse_directions(
+  @spec parse_route_info({:ok, map()}) :: map()
+  def parse_route_info(
         {:ok,
          %{
            directions: %{
@@ -86,6 +95,9 @@ defmodule QuickestRoute.Search.Google do
     |> then(&Map.put(intermediate, :duration, &1))
   end
 
-  def parse_directions({:ok, place}),
+  def parse_route_info({:ok, place}),
     do: Map.put(place, :duration, @not_found)
+
+  @spec get_api_key() :: String.t()
+  def get_api_key, do: Application.get_env(:quickest_route, __MODULE__)[:google_api_key]
 end
