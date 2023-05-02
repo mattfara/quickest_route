@@ -6,10 +6,8 @@ defmodule QuickestRoute.Search.Searcher do
 
   def search(
         %SearchInfo{
-          origin: %Place{refined: [%{"place_id" => from_id}]} = origin,
+          origin: origin,
           alternatives: alternatives,
-          departure_time: departure_time,
-          final_destination: %Place{refined: [%{"place_id" => final_id}]} = final_destination,
         } = search_info,
         api_key
       ) do
@@ -17,7 +15,7 @@ defmodule QuickestRoute.Search.Searcher do
       alternatives
       |> Stream.map(&Google.get_direction_url(search_info, &1, api_key))
       |> Task.async_stream(&get_directions(&1))
-      |> Stream.map(&Google.parse_route_info(&1)) # this might need to change given waypoint
+      |> Stream.map(&Google.parse_route_info(&1))
       |> Enum.map(
         &{
           origin,

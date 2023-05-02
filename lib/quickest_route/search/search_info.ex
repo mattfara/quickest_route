@@ -3,6 +3,9 @@ defmodule QuickestRoute.Search.SearchInfo do
   Gathers fields during search for trip durations
   """
 
+  use StructAccess
+  ## TODO - really want to use this just for tests? see google_test.exs
+
   alias QuickestRoute.Search.Place
 
   defstruct [
