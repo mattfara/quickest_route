@@ -7,7 +7,7 @@ defmodule QuickestRoute.Search.Searcher do
   def search(
         %SearchInfo{
           origin: origin,
-          alternatives: alternatives,
+          alternatives: alternatives
         } = search_info,
         api_key
       ) do
@@ -20,7 +20,8 @@ defmodule QuickestRoute.Search.Searcher do
         &{
           origin,
           &1.alternative,
-          &1.duration
+          &1.duration,
+          search_info[:final_destination]
         }
       )
 

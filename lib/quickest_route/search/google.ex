@@ -4,7 +4,7 @@ defmodule QuickestRoute.Search.Google do
   """
 
   alias QuickestRoute.Search.{ApiCaller, Place, SearchInfo}
-  alias QuickestRoute.{StringHelpers}
+  alias QuickestRoute.{MapHelpers, StringHelpers}
 
   @not_found "?"
 
@@ -85,25 +85,27 @@ defmodule QuickestRoute.Search.Google do
          %{
            directions: %{
              "status" => "OK",
-             "routes" => [%{"legs" => [%{"duration" => %{"text" => text}}] = leg_info}]
+             "routes" => [%{"legs" => legs}]
            }
          } = intermediate}
       ) do
-    duration_string =
-      leg_info
-      |> List.first()
-      |> get_in(["duration_in_traffic", "text"]) ||
-        text
+    duration =
+      Enum.reduce(legs, 0, fn x, acc ->
+        x
+        |> MapHelpers.get_first([["duration_in_traffic", "text"], ["duration", "text"]], "")
+        |> String.split(" ")
+        |> List.first()
+        |> StringHelpers.parse_integer(fallback: 0)
+        |> Kernel.+(acc)
+      end)
 
-    duration_string
-    |> String.split(" ")
-    |> List.first()
-    |> StringHelpers.parse_integer(fallback: @not_found)
-    |> then(&Map.put(intermediate, :duration, &1))
+    duration = if duration == 0, do: "?", else: duration
+
+    Map.put(intermediate, :duration, duration)
   end
 
   def parse_route_info({:ok, place}),
-    do: Map.put(place, :duration, @not_found)
+    do: Map.put(place, :duration, @not_found) |> IO.inspect(label: "UNMATCHED")
 
   @spec get_api_key() :: String.t()
   def get_api_key, do: Application.get_env(:quickest_route, __MODULE__)[:google_api_key]
