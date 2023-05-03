@@ -19,7 +19,7 @@ defmodule QuickestRouteWeb.SearchController do
       sorted_result =
         Enum.sort_by(
           completed_search.durations,
-          fn {_origin, _alternative, duration} -> duration end
+          fn {_origin, _alternative, duration, _final_destination} -> duration end
         )
 
       render(conn, "show.html", response: sorted_result)

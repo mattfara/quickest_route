@@ -34,7 +34,10 @@ defmodule QuickestRoute.Search.Parameters do
     |> changeset()
     |> case do
       %{valid?: true, changes: changes, data: data} ->
-        {:ok, Map.merge(data, changes, fn _k, data_value, change_value -> change_value || data_value end)}
+        {:ok,
+         Map.merge(data, changes, fn _k, data_value, change_value ->
+           change_value || data_value
+         end)}
 
       changeset ->
         {:error, changeset}
