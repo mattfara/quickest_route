@@ -4,11 +4,11 @@ defmodule QuickestRoute.UrlHelpersTest do
   alias QuickestRoute.UrlHelpers
 
   describe "space_to_plus/1" do
-    test "replaces a space with a plus" do
+    test "should replace a space with a plus" do
       assert "a+b+c" == UrlHelpers.space_to("a b c", "+")
     end
 
-    test "replaces multiple spaces with a plus" do
+    test "should replace multiple spaces with a plus" do
       assert "a+b+c" == UrlHelpers.space_to("a   b          c", "+")
     end
   end

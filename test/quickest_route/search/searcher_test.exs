@@ -25,7 +25,7 @@ defmodule QuickestRoute.Search.SearcherTest do
        }}
     end
 
-    test "parses and sorts durations from successful API call", %{
+    test "should parse and sort durations from successful API call", %{
       data: data,
       api_key: api_key,
       responses: responses
@@ -38,7 +38,7 @@ defmodule QuickestRoute.Search.SearcherTest do
              ]) == Searcher.search(data, api_key)
     end
 
-    test "Successfully parses a non-200 response", %{
+    test "should successfully parse a non-200 response", %{
       data: data,
       api_key: api_key,
       responses: responses
