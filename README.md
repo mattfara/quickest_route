@@ -28,4 +28,4 @@ User's name is replaced by Google's name for precision.
 * Should handle error cases more elegantly
 * Generally the search and results pages should look better
 * Should have a limit on the number of alternative destinations
-* Should make a third input for a fixed final destination
+* ~~Should make a third input for a fixed final destination~~

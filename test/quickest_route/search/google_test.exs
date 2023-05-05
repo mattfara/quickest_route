@@ -18,7 +18,8 @@ defmodule QuickestRoute.Search.GoogleTest do
        search_info: search_info, to: %Place{refined: [%{"place_id" => "ghi"}]}, api_key: "jkl"}
     end
 
-    test "creates url properly when searching for departure right now", context do
+    test "should create url properly when searching for departure right now (unspecified departure time)",
+         context do
       expected = %{
         alternative: context.to,
         direction_url:
@@ -29,7 +30,8 @@ defmodule QuickestRoute.Search.GoogleTest do
                Google.get_direction_url(context.search_info, context.to, context.api_key)
     end
 
-    test "creates url properly when searching for departure at specific datetime", context do
+    test "should create url properly when searching for departure at specific datetime",
+         context do
       context = put_in(context, [:search_info, :departure_time], "2023-04-20T15:02")
 
       expected = %{
@@ -42,7 +44,7 @@ defmodule QuickestRoute.Search.GoogleTest do
                Google.get_direction_url(context.search_info, context.to, context.api_key)
     end
 
-    test "creates url properly when final destination is used", context do
+    test "should create url properly when final destination is used", context do
       final_destination = %Place{refined: [%{"place_id" => "finally"}]}
       context = put_in(context, [:search_info, :final_destination], final_destination)
 
@@ -58,7 +60,7 @@ defmodule QuickestRoute.Search.GoogleTest do
   end
 
   describe "get_place_url/2" do
-    test "creates url properly" do
+    test "should create url properly for place" do
       place = "I wanna go here"
       api_key = "abc123"
 
@@ -70,7 +72,7 @@ defmodule QuickestRoute.Search.GoogleTest do
   end
 
   describe "refine_place/2" do
-    test "returns an :ok Place when proper json returned" do
+    test "should return an Place with status = ok when proper json returned" do
       expected_candidates = [
         %{"name" => "the name", "place_id" => "the id"}
       ]
@@ -88,7 +90,7 @@ defmodule QuickestRoute.Search.GoogleTest do
                Google.refine_place(place, "abc")
     end
 
-    test "retuns an :error Place when non-200 json returned" do
+    test "should return a Place with status = :error when non-200 json returned" do
       bad_json = %{
         "status" => "NOT_OK",
         "candidates" => []
