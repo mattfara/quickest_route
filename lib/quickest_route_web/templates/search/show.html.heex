@@ -1,11 +1,12 @@
 <h1> RESULTS </h1>
 
 <table>
-  <%= for {origin, alt, minutes, final_destination} <- @response do %>
+  <%= for {origin, alt, {minutes, miles}, final_destination} <- @response do %>
     <tr>
       <td>
         <%= minutes %> minutes from <%= get_place_name(origin) %> to <strong><%= get_place_name(alt) %> </strong>
         <%= if final_destination, do: "then #{get_place_name(final_destination)}" %>
+        (<%= miles %> miles)
       </td>
     </tr>
   <% end %>

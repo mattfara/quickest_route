@@ -4,7 +4,8 @@ defmodule QuickestRoute.Search.Google do
   """
 
   alias QuickestRoute.Search.{ApiCaller, Place, SearchInfo}
-  alias QuickestRoute.{MapHelpers, StringHelpers}
+  alias QuickestRoute.MapHelpers
+  import PatternHelpers
 
   @not_found "?"
 
@@ -17,6 +18,7 @@ defmodule QuickestRoute.Search.Google do
         %Place{refined: [%{"place_id" => to_id} | _]} = to_place,
         api_key
       ) do
+    ## TODO - refactor this garbage
     url =
       get_base_directions_url() <>
         "?" <> get_origin_query(from_id) <> "&" <> get_api_key_query(api_key) <> "&"
@@ -89,23 +91,28 @@ defmodule QuickestRoute.Search.Google do
            }
          } = intermediate}
       ) do
-    duration =
-      Enum.reduce(legs, 0, fn x, acc ->
-        x
-        |> MapHelpers.get_first([["duration_in_traffic", "text"], ["duration", "text"]], "")
-        |> String.split(" ")
-        |> List.first()
-        |> StringHelpers.parse_integer(fallback: 0)
-        |> Kernel.+(acc)
-      end)
+    duration = sum_leg_property(legs, [["duration_in_traffic", "text"], ["duration", "text"]])
+    distance = sum_leg_property(legs, [["distance", "text"]])
 
-    duration = if duration == 0, do: "?", else: duration
-
-    Map.put(intermediate, :duration, duration)
+    Map.put(intermediate, :route_info, {duration, distance})
   end
 
   def parse_route_info({:ok, place}),
-    do: Map.put(place, :duration, @not_found) |> IO.inspect(label: "UNMATCHED")
+    do: Map.put(place, :route_info, {@not_found, @not_found}) |> IO.inspect(label: "UNMATCHED")
+
+  defp sum_leg_property(legs, path_alternatives) do
+    Enum.reduce(legs, 0, fn leg, acc ->
+      leg
+      |> MapHelpers.get_first(path_alternatives, "")
+      |> Integer.parse()
+      |> pattern_filter({x, _}, 0)
+      |> Kernel.+(acc)
+    end)
+    |> case do
+      0 -> @not_found
+      x -> x
+    end
+  end
 
   @spec get_api_key() :: String.t()
   def get_api_key, do: Application.get_env(:quickest_route, __MODULE__)[:google_api_key]

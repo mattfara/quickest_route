@@ -13,7 +13,7 @@ defmodule QuickestRoute.Search.SearchInfo do
     :departure_time,
     :alternatives,
     :final_destination,
-    :durations
+    :search_summary
   ]
 
   @type t :: %__MODULE__{
@@ -21,7 +21,7 @@ defmodule QuickestRoute.Search.SearchInfo do
           departure_time: String.t(),
           alternatives: list(Place.t()),
           final_destination: Place.t(),
-          durations: [
+          search_summary: [
             tuple()
           ]
         }
