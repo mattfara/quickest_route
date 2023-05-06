@@ -119,7 +119,8 @@ defmodule QuickestRoute.Search.GoogleTest do
 
       direction_json = {:ok, intermediate}
 
-      assert Map.put(intermediate, :duration, 23) == Google.parse_route_info(direction_json)
+      assert Map.put(intermediate, :route_info, {23, "?"}) ==
+               Google.parse_route_info(direction_json)
     end
 
     test "should take duration_in_traffic over duration if available" do
@@ -141,7 +142,8 @@ defmodule QuickestRoute.Search.GoogleTest do
 
       direction_json = {:ok, intermediate}
 
-      assert Map.put(intermediate, :duration, 22) == Google.parse_route_info(direction_json)
+      assert Map.put(intermediate, :route_info, {22, "?"}) ==
+               Google.parse_route_info(direction_json)
     end
 
     test "should take sum of durations if multiple available" do
@@ -161,10 +163,11 @@ defmodule QuickestRoute.Search.GoogleTest do
 
       direction_json = {:ok, intermediate}
 
-      assert Map.put(intermediate, :duration, 46) == Google.parse_route_info(direction_json)
+      assert Map.put(intermediate, :route_info, {46, "?"}) ==
+               Google.parse_route_info(direction_json)
     end
 
-    test "should return a `?` if cannot parse a duration" do
+    test "should return a `?` if cannot parse route info" do
       intermediate = %{
         directions: %{
           "status" => "OK",
@@ -174,7 +177,8 @@ defmodule QuickestRoute.Search.GoogleTest do
 
       direction_json = {:ok, intermediate}
 
-      assert Map.put(intermediate, :duration, "?") == Google.parse_route_info(direction_json)
+      assert Map.put(intermediate, :route_info, {"?", "?"}) ==
+               Google.parse_route_info(direction_json)
     end
   end
 end
