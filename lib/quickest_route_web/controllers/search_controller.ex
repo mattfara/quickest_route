@@ -18,7 +18,7 @@ defmodule QuickestRouteWeb.SearchController do
          {:ok, completed_search} <- Search.search(refined_search) do
       sorted_result =
         Enum.sort_by(
-          completed_search.route_info,
+          completed_search.search_summary,
           fn {_origin, _alternative, {duration, _distance}, _final_destination} -> duration end
         )
 
