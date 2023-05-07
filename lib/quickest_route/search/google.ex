@@ -10,49 +10,54 @@ defmodule QuickestRoute.Search.Google do
   @not_found "?"
 
   def get_direction_url(
-        %SearchInfo{
-          origin: %Place{refined: [%{"place_id" => from_id}]},
-          departure_time: departure_time,
-          final_destination: final_destination
-        },
+        search_info,
         %Place{refined: [%{"place_id" => to_id} | _]} = to_place,
         api_key
       ) do
-    ## TODO - refactor this garbage
-    url =
-      get_base_directions_url() <>
-        "?" <> get_origin_query(from_id) <> "&" <> get_api_key_query(api_key) <> "&"
+    builders = [
+      &get_origin_query/1,
+      &get_departure_time_query/1,
+      curry_destination_query(to_id)
+    ]
 
-    url =
-      if departure_time == "now" do
-        url
-      else
-        url <> get_departure_time_query(departure_time) <> "&"
-      end
-
-    url =
-      if final_destination do
-        url <> get_destination_query(final_destination) <> "&" <> get_waypoint_query(to_id)
-      else
-        url <> get_destination_query(to_id)
-      end
+    dynamic =
+      builders
+      |> Enum.map(fn builder -> builder.(search_info) end)
+      |> Enum.filter(fn str -> str != "" end)
+      |> Enum.join("&")
 
     %{
       alternative: to_place,
-      direction_url: url
+      direction_url: get_base_directions_url(api_key) <> dynamic
     }
   end
 
-  defp get_base_directions_url(), do: "https://maps.googleapis.com/maps/api/directions/json"
-  defp get_origin_query(place_id), do: "origin=place_id:#{place_id}"
+  defp get_base_directions_url(api_key),
+    do: "https://maps.googleapis.com/maps/api/directions/json?key=#{api_key}&"
 
-  defp get_destination_query(%Place{refined: [%{"place_id" => place_id}]}),
-    do: "destination=place_id:#{place_id}"
+  defp get_origin_query(%SearchInfo{origin: %Place{refined: [%{"place_id" => place_id}]}}),
+    do: "origin=place_id:#{place_id}"
 
-  defp get_destination_query(place_id), do: "destination=place_id:#{place_id}"
-  defp get_waypoint_query(place_id), do: "waypoints=place_id:#{place_id}"
-  defp get_api_key_query(api_key), do: "key=#{api_key}"
-  defp get_departure_time_query(departure_time), do: "departure_time=#{departure_time}"
+  defp get_departure_time_query(%SearchInfo{departure_time: "now"}), do: ""
+
+  defp get_departure_time_query(%SearchInfo{departure_time: departure_time}),
+    do: "departure_time=#{departure_time}"
+
+  # curry this? build FN with to_id then return FN that takes the search info
+  defp curry_destination_query(to_id) do
+    fn
+      %SearchInfo{final_destination: nil} ->
+        "destination=place_id:#{to_id}"
+
+      %SearchInfo{final_destination: %Place{refined: [%{"place_id" => place_id}]}} ->
+        "destination=place_id:#{place_id}&waypoints=place_id:#{to_id}"
+    end
+  end
+
+  # defp get_destination_query(%Place{refined: [%{"place_id" => place_id}]}),
+  #  do: "destination=place_id:#{place_id}"
+
+  # defp get_destination_query(place_id), do: "destination=place_id:#{place_id}"
 
   @doc """
   Retrieves the official name and `place_id` for user input
@@ -98,7 +103,7 @@ defmodule QuickestRoute.Search.Google do
   end
 
   def parse_route_info({:ok, place}),
-    do: Map.put(place, :route_info, {@not_found, @not_found}) |> IO.inspect(label: "UNMATCHED")
+    do: Map.put(place, :route_info, {@not_found, @not_found})
 
   defp sum_leg_property(legs, path_alternatives) do
     Enum.reduce(legs, 0, fn leg, acc ->

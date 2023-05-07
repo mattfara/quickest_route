@@ -23,7 +23,7 @@ defmodule QuickestRoute.Search.GoogleTest do
       expected = %{
         alternative: context.to,
         direction_url:
-          "https://maps.googleapis.com/maps/api/directions/json?origin=place_id:from&key=jkl&destination=place_id:ghi"
+          "https://maps.googleapis.com/maps/api/directions/json?key=jkl&origin=place_id:from&destination=place_id:ghi"
       }
 
       assert expected ==
@@ -37,7 +37,7 @@ defmodule QuickestRoute.Search.GoogleTest do
       expected = %{
         alternative: context.to,
         direction_url:
-          "https://maps.googleapis.com/maps/api/directions/json?origin=place_id:from&key=jkl&departure_time=2023-04-20T15:02&destination=place_id:ghi"
+          "https://maps.googleapis.com/maps/api/directions/json?key=jkl&origin=place_id:from&departure_time=2023-04-20T15:02&destination=place_id:ghi"
       }
 
       assert expected ==
@@ -51,7 +51,7 @@ defmodule QuickestRoute.Search.GoogleTest do
       expected = %{
         alternative: context.to,
         direction_url:
-          "https://maps.googleapis.com/maps/api/directions/json?origin=place_id:from&key=jkl&destination=place_id:finally&waypoints=place_id:ghi"
+          "https://maps.googleapis.com/maps/api/directions/json?key=jkl&origin=place_id:from&destination=place_id:finally&waypoints=place_id:ghi"
       }
 
       assert expected ==
