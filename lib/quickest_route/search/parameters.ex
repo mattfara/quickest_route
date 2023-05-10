@@ -2,6 +2,7 @@ defmodule QuickestRoute.Search.Parameters do
   @moduledoc """
   Schema for new search form
   """
+  alias Ecto.Changeset
 
   use Ecto.Schema
   import Ecto.Changeset
@@ -32,15 +33,10 @@ defmodule QuickestRoute.Search.Parameters do
   def validate(form) do
     form
     |> changeset()
+    |> apply_action(:validate)
     |> case do
-      %{valid?: true, changes: changes, data: data} ->
-        {:ok,
-         Map.merge(data, changes, fn _k, data_value, change_value ->
-           change_value || data_value
-         end)}
-
-      changeset ->
-        {:error, changeset}
+      {:ok, %__MODULE__{}} = parameters -> parameters
+      {:error, %Changeset{}} = error -> error
     end
   end
 

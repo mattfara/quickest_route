@@ -17,7 +17,7 @@ defmodule QuickestRoute.Search do
 
   def validate(params), do: Parameters.validate(params)
 
-  def convert(validated_params), do: {:ok, SearchInfo.init(validated_params)}
+  def convert(%Parameters{} = validated_params), do: {:ok, SearchInfo.init(validated_params)}
 
   # @spec refine(SearchInfo.t()) :: SearchInfo.t()
   def refine(%SearchInfo{

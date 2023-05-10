@@ -1,15 +1,23 @@
 <h1>Quickest Route</h1>
 
 <%= form_for @changeset, Routes.search_path(@conn, :run), fn f ->  %>
+  <%= if @changeset.action do %>
+    <div class="alert alert-danger">
+      <p>Oops, something went wrong. See errors below</p>
+    </div>
+  <% end %>
+
   <section class="row">
     <article class="column">
       <h3>Starting From...</h3>
       <div>
+        <label>Location</label>
         <%= text_input f, :from %>
+        <%= error_tag f, :from %>
         <div>
         <label>Departure time</label>
         <%= datetime_local_input f, :departure_time %>
-        <p>Leave blank for "now"</p>
+        <p><small><em>Leave blank for "now"</em></small></p>
         <!-- consider a checkbox which if checked will remove the input field altogether -->
         </div>
       </div>
@@ -18,16 +26,20 @@
     <article class="column">
       <h3>To...</h3>
       <div>
+        <label>Location</label>
         <%= array_input f, :to %>
         <%= array_add_button f, :to %>
+        <%= error_tag f, :to %>
       </div>
     </article>
+
     <article class="column">
       <!-- TODO does VScode have anything for completing html tags??? -->
       <h3>And Finally To...</h3>
       <div>
+        <label>Location</label>
         <%= text_input f, :finally %>
-        <p>Leave blank if not needed</p>
+        <p><small><em>Leave blank if not needed</em></small></p>
       </div>
     </article>
   </section>

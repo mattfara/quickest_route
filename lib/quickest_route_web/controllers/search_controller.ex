@@ -2,6 +2,9 @@ defmodule QuickestRouteWeb.SearchController do
   use QuickestRouteWeb, :controller
 
   alias QuickestRoute.Search
+  alias QuickestRouteWeb.Fallback.FallbackController
+
+  action_fallback(FallbackController)
 
   def new(conn, _params) do
     changeset = Search.form()
