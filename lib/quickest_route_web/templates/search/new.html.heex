@@ -8,22 +8,22 @@
   <% end %>
 
   <section class="row">
-    <article class="column">
+    <article class="column" style="border-right: 1px solid black">
       <h3>Starting From...</h3>
       <div>
         <label>Location</label>
         <%= text_input f, :from %>
         <%= error_tag f, :from %>
         <div>
-        <label>Departure time</label>
-        <%= datetime_local_input f, :departure_time %>
-        <p><small><em>Leave blank for "now"</em></small></p>
-        <!-- consider a checkbox which if checked will remove the input field altogether -->
+          <label>Departure Time</label>
+          <%= datetime_local_input f, :departure_time %>
+          <p><small><em>Leave blank for "now"</em></small></p>
+          <!-- consider a checkbox which if checked will remove the input field altogether -->
         </div>
       </div>
     </article>
 
-    <article class="column">
+    <article class="column" style="border-right: 1px solid black">
       <h3>To...</h3>
       <div>
         <label>Location</label>
@@ -38,8 +38,7 @@
       <h3>And Finally To...</h3>
       <div>
         <label>Location</label>
-        <%= text_input f, :finally %>
-        <p><small><em>Leave blank if not needed</em></small></p>
+        <%= text_input f, :finally, placeholder: "Leave blank if not needed" %>
       </div>
     </article>
   </section>
