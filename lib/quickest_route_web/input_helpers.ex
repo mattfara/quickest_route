@@ -14,7 +14,12 @@ defmodule QuickestRouteWeb.InputHelpers do
 
   def array_input(form, field) do
     id = Phoenix.HTML.Form.input_id(form, field) <> "_container"
-    values = Phoenix.HTML.Form.input_value(form, field) || [""]
+
+    values =
+      case Phoenix.HTML.Form.input_value(form, field) do
+        val when val in [[], nil] -> [""]
+        user_input -> user_input
+      end
 
     content_tag :ul, id: id, class: "input_container", style: "list-style:none" do
       for {value, i} <- Enum.with_index(values) do
