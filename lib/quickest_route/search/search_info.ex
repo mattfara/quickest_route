@@ -26,6 +26,7 @@ defmodule QuickestRoute.Search.SearchInfo do
           ]
         }
 
+## TODO - maybe delete this completely
   def init(%Parameters{
         from: from,
         to: [_ | _] = to,

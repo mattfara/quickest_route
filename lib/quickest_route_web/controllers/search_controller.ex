@@ -13,12 +13,24 @@ defmodule QuickestRouteWeb.SearchController do
 
   def run(conn, %{"parameters" => params}) do
     with {:ok, validated_params} <- Search.validate(params),
-         {:ok, search_info} <- Search.convert(validated_params),
+        ## maybe we only convert after we get the refined result...
+        ## once Parameters are validated
+        ## we try to refine them
+        ## if any are unrefinable, we toss the params back
+        ## if all are good, we convert
+        ## how do we validate each field in parameter wrt refinement?
+
+        {:ok, search_info} <- Search.refine(validated_params),
+        ## ALT
+
+        ## we could keep more similar to how it is
+        ## we validate the SearchInfo post-refinement
+        ## and if bad, we convert it back to Parameters to display on UI
+         #{:ok, search_info} <- Search.convert(refined_params),
          ## TODO - need to work out how to deal with unrefined results and multiple results
          ## probably use the `else` to drive some view behavior
          ## ask user to try another input or select from the choices, respectively
-         {:ok, refined_search} <- Search.refine(search_info),
-         {:ok, completed_search} <- Search.search(refined_search) do
+         {:ok, completed_search} <- Search.search(search_info) do
       sorted_result =
         Enum.sort_by(
           completed_search.search_summary,

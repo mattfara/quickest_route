@@ -62,24 +62,26 @@ defmodule QuickestRoute.Search.Google do
   @doc """
   Retrieves the official name and `place_id` for user input
   """
-  def refine_place(nil, _api_key), do: nil
+  def refine_place({:finally, nil}, _api_key), do: {:finally, nil}
 
-  def refine_place(user_place_name, api_key),
+  def refine_place({atom, value}, api_key) when atom in [:from, :to, :finally],
     do:
-      user_place_name
+      value
       |> get_place_url(api_key)
       |> ApiCaller.call()
-      |> parse_place_json(user_place_name)
+      |> parse_place_json(atom, value)
 
-  defp parse_place_json(%{"status" => "OK", "candidates" => candidates}, place),
-    do: %Place{status: :ok, original: place, refined: candidates}
+  ## TODO - have to handle cases where multiple options are returned - maybe show
+  ## user the options and let them pick
+  defp parse_place_json(%{"status" => "OK", "candidates" => candidates}, atom, value),
+    do: {atom, %Place{status: :ok, original: value, refined: candidates}}
 
-  defp parse_place_json(_, place),
-    do: %Place{
+  defp parse_place_json(_, atom, value),
+    do: {atom, %Place{
       status: :error,
-      original: place,
-      error_message: "Unable to refine place \"#{place}\" for search"
-    }
+      original: value,
+      error_message: "Unable to refine place \"#{value}\" for search"
+    }}
 
   @spec get_place_url(place :: String.t(), api_key :: String.t()) :: String.t()
   def get_place_url(place, api_key),
