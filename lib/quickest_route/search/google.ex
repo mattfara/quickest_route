@@ -43,7 +43,7 @@ defmodule QuickestRoute.Search.Google do
   defp get_departure_time_query(%SearchInfo{departure_time: departure_time}),
     do: "departure_time=#{departure_time}"
 
-  # curry this? build FN with to_id then return FN that takes the search info
+  # URL should vary depending on whether user supplied a final destination
   defp curry_destination_query(to_id) do
     fn
       %SearchInfo{final_destination: nil} ->
@@ -54,15 +54,10 @@ defmodule QuickestRoute.Search.Google do
     end
   end
 
-  # defp get_destination_query(%Place{refined: [%{"place_id" => place_id}]}),
-  #  do: "destination=place_id:#{place_id}"
-
-  # defp get_destination_query(place_id), do: "destination=place_id:#{place_id}"
-
   @doc """
   Retrieves the official name and `place_id` for user input
   """
-  def refine_place({:finally, nil}, _api_key), do: {:finally, nil}
+  def refine_place({:finally, nil}, _api_key), do: {:finally, %Place{status: :unused}}
 
   def refine_place({atom, value}, api_key) when atom in [:from, :to, :finally],
     do:

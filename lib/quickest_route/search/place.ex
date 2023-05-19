@@ -6,6 +6,8 @@ defmodule QuickestRoute.Search.Place do
     :error_message
   ]
 
+  ## TODO - is there room for an OR ADT here wrt status property?
+
   @type t :: %__MODULE__{
           status: :atom,
           original: String.t(),
