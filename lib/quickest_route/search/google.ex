@@ -63,6 +63,7 @@ defmodule QuickestRoute.Search.Google do
     do:
       value
       |> get_place_url(api_key)
+      |> IO.inspect(label: "BEFORE API CALLER")
       |> ApiCaller.call()
       |> parse_place_json(atom, value)
 
@@ -72,11 +73,13 @@ defmodule QuickestRoute.Search.Google do
     do: {atom, %Place{status: :ok, original: value, refined: candidates}}
 
   defp parse_place_json(_, atom, value),
-    do: {atom, %Place{
-      status: :error,
-      original: value,
-      error_message: "Unable to refine place \"#{value}\" for search"
-    }}
+    do:
+      {atom,
+       %Place{
+         status: :error,
+         original: value,
+         error_message: "Unable to refine place \"#{value}\" for search"
+       }}
 
   @spec get_place_url(place :: String.t(), api_key :: String.t()) :: String.t()
   def get_place_url(place, api_key),
@@ -103,7 +106,8 @@ defmodule QuickestRoute.Search.Google do
     do: Map.put(place, :route_info, {@not_found, @not_found})
 
   defp sum_leg_property(legs, path_alternatives) do
-    Enum.reduce(legs, 0, fn leg, acc ->
+    legs
+    |> Enum.reduce(0, fn leg, acc ->
       leg
       |> MapHelpers.get_first(path_alternatives, "")
       |> Integer.parse()
