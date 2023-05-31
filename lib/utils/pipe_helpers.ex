@@ -17,4 +17,8 @@ defmodule Utils.PipeHelpers do
       false_fn.(data)
     end
   end
+
+  ## TODO - what about something like a
+  ## `pipe_if_else`? Different from above?
+
 end

@@ -59,13 +59,12 @@ defmodule QuickestRoute.Search.Google do
   """
   def refine_place({:finally, nil}, _api_key), do: {:finally, %Place{status: :unused}}
 
-  def refine_place({atom, value}, api_key) when atom in [:from, :to, :finally],
+  def refine_place({place_context, user_input}, api_key) when place_context in [:from, :to, :finally],
     do:
-      value
+      user_input
       |> get_place_url(api_key)
-      |> IO.inspect(label: "BEFORE API CALLER")
       |> ApiCaller.call()
-      |> parse_place_json(atom, value)
+      |> parse_place_json(place_context, user_input)
 
   ## TODO - have to handle cases where multiple options are returned - maybe show
   ## user the options and let them pick
@@ -82,9 +81,11 @@ defmodule QuickestRoute.Search.Google do
        }}
 
   @spec get_place_url(place :: String.t(), api_key :: String.t()) :: String.t()
+  def get_place_url(nil, _api_key), do: nil
   def get_place_url(place, api_key),
     do:
       "https://maps.googleapis.com/maps/api/place/findplacefromtext/json?fields=name%2Cplace_id&input=#{URI.encode(place)}&inputtype=textquery&key=#{api_key}"
+
 
   @spec parse_route_info({:ok, map()}) :: map()
   def parse_route_info(

@@ -58,9 +58,8 @@ defmodule QuickestRoute.Search.SearcherTest do
     end
   end
 
-  describe "refine/1" do
-    setup do
-      responses = %{
+      ## TODO - rename
+      @responses %{
         ok_full_context: %{
           location_a: %{
             "status" => "OK",
@@ -102,30 +101,35 @@ defmodule QuickestRoute.Search.SearcherTest do
         bad: %{}
       }
 
-      data = {:ok, api_key: "xyz", responses: responses}
-      expect(ApiCaller, :call, 8, fn url ->
+  describe "refine/1" do
+    setup do
+      {:ok, api_key: "xyz", responses: @responses}
+    end
+
+    defp expect_n_api_calls(n) do
+      expect(ApiCaller, :call, n, fn url ->
         cond do
           url =~ "abc" ->
-            responses.ok_full_context.location_a
+            @responses.ok_full_context.location_a
 
           url =~ "def" ->
-            responses.ok_full_context.location_b
+            @responses.ok_full_context.location_b
 
           url =~ "ghi" ->
-            responses.ok_full_context.location_c
+            @responses.ok_full_context.location_c
 
           url =~ "jkl" ->
-            responses.ok_full_context.location_d
+            @responses.ok_full_context.location_d
         end
       end)
 
-      data
     end
 
     test "should refine search including `final_destination` and multiple alternatives into `SearchInfo`",
          %{
            api_key: api_key
          } do
+      expect_n_api_calls(8)
       params = %Parameters{from: "abc", to: ["def", "ghi"], finally: "jkl", departure_time: "now"}
 
       assert {:ok,
@@ -161,8 +165,39 @@ defmodule QuickestRoute.Search.SearcherTest do
               }} == Searcher.refine(params, api_key)
     end
 
-    test "should refine search lacking a `final_destination` into `SearchInfo`" do
-      flunk("Not implemented")
+    test "should refine search lacking a `final_destination` into `SearchInfo`",
+         %{
+           api_key: api_key
+         } do
+      expect_n_api_calls(6)
+      params = %Parameters{from: "abc", to: ["def", "ghi"], finally: nil, departure_time: "now"}
+
+      assert {:ok,
+              %QuickestRoute.Search.SearchInfo{
+                origin: %QuickestRoute.Search.Place{
+                  status: :ok,
+                  original: "abc",
+                  refined: %{"name" => "location_a", "place_id" => "abc123"},
+                  error_message: nil
+                },
+                departure_time: "now",
+                alternatives: [
+                  %QuickestRoute.Search.Place{
+                    status: :ok,
+                    original: "ghi",
+                    refined: %{"name" => "location_c", "place_id" => "ghi345"},
+                    error_message: nil
+                  },
+                  %QuickestRoute.Search.Place{
+                    status: :ok,
+                    original: "def",
+                    refined: %{"name" => "location_b", "place_id" => "def234"},
+                    error_message: nil
+                  }
+                ],
+                final_destination: nil,
+                search_summary: nil
+              }} == Searcher.refine(params, api_key)
     end
   end
 end

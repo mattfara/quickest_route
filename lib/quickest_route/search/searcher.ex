@@ -14,13 +14,13 @@ defmodule QuickestRoute.Search.Searcher do
       parameters
       |> Map.take([:from, :to, :finally])
       |> Map.to_list()
-      ## TODO - rename this or figure out flatmap better
-      ## maybe `maybe_distribute_place_context/1`
-      |> Enum.map(&maybe_flatten_list/1)
+      |> Enum.map(&maybe_distribute_place_context/1)
       |> List.flatten()
       |> Enum.map(fn {place_context, user_input} ->
         {place_context, {user_input, Google.get_place_url(user_input, api_key)}}
       end)
+      ## BUG - these asyc tasks get called twice per list member.....
+      ## at least when using mimic expect.....
       |> Task.async_stream(&get_refinement/1)
       |> Stream.map(&to_place_struct/1)
 
@@ -43,8 +43,15 @@ defmodule QuickestRoute.Search.Searcher do
     end
   end
 
+  defp get_refinement({:finally, {nil, nil}} = unused),
+    do: unused
+
   defp get_refinement({place_context, {user_input, url}}),
     do: {place_context, {user_input, ApiCaller.call(url)}}
+
+  defp to_search_info({:finally, %Place{status: :unused}}, search_info) do
+    Map.put(search_info, :final_destination, nil)
+  end
 
   defp to_search_info({:finally, finally}, search_info) do
     Map.put(search_info, :final_destination, finally)
@@ -59,20 +66,24 @@ defmodule QuickestRoute.Search.Searcher do
     Map.put(search_info, :alternatives, [to | alts])
   end
 
-  defp maybe_flatten_list({atom, [_ | _] = val}), do: Enum.map(val, fn v -> {atom, v} end)
+  defp maybe_distribute_place_context({atom, [_ | _] = val}), do: Enum.map(val, fn v -> {atom, v} end)
 
-  defp maybe_flatten_list(x), do: x
+  defp maybe_distribute_place_context(x), do: x
 
+  ## TODO - need another catch for status != OK, as opposed to unused
+  ## AND situations where there is more than one candidate
   defp to_place_struct({
          :ok,
-         {atom,
-          {original,
+         {place_context,
+          {user_input,
            %{
              "candidates" => [refined],
              "status" => "OK"
            }}}
        }),
-       do: {atom, %Place{status: :ok, original: original, refined: refined}}
+       do: {place_context, %Place{status: :ok, original: user_input, refined: refined}}
+
+  defp to_place_struct({:ok, {place_context, _}}), do: {place_context, %Place{status: :unused}}
 
   def search(
         %SearchInfo{
