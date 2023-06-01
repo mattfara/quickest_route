@@ -98,13 +98,14 @@ defmodule QuickestRoute.Search.GoogleTest do
 
       expect(ApiCaller.call(_url), do: bad_json)
 
-      place = "user input"
+      place = {:to, "user input"}
 
-      assert %Place{
+      assert {:to, %Place{
                status: :error,
-               original: ^place,
-               error_message: "Unable to refine place \"user input\" for search"
-             } = Google.refine_place(place, "abc")
+               original: "user input",
+               error_message: "Unable to refine place \"user input\" for search",
+               refined: nil
+             }} = Google.refine_place(place, "abc")
     end
   end
 
