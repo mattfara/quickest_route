@@ -137,7 +137,7 @@ defmodule QuickestRoute.Search.SearcherTest do
                 origin: %QuickestRoute.Search.Place{
                   status: :ok,
                   original: "abc",
-                  refined: %{"name" => "location_a", "place_id" => "abc123"},
+                  refined: [%{"name" => "location_a", "place_id" => "abc123"}],
                   error_message: nil
                 },
                 departure_time: "now",
@@ -145,20 +145,20 @@ defmodule QuickestRoute.Search.SearcherTest do
                   %QuickestRoute.Search.Place{
                     status: :ok,
                     original: "ghi",
-                    refined: %{"name" => "location_c", "place_id" => "ghi345"},
+                    refined: [%{"name" => "location_c", "place_id" => "ghi345"}],
                     error_message: nil
                   },
                   %QuickestRoute.Search.Place{
                     status: :ok,
                     original: "def",
-                    refined: %{"name" => "location_b", "place_id" => "def234"},
+                    refined: [%{"name" => "location_b", "place_id" => "def234"}],
                     error_message: nil
                   }
                 ],
                 final_destination: %QuickestRoute.Search.Place{
                   status: :ok,
                   original: "jkl",
-                  refined: %{"name" => "location_d", "place_id" => "jkl456"},
+                  refined: [%{"name" => "location_d", "place_id" => "jkl456"}],
                   error_message: nil
                 },
                 search_summary: nil
@@ -177,7 +177,7 @@ defmodule QuickestRoute.Search.SearcherTest do
                 origin: %QuickestRoute.Search.Place{
                   status: :ok,
                   original: "abc",
-                  refined: %{"name" => "location_a", "place_id" => "abc123"},
+                  refined: [%{"name" => "location_a", "place_id" => "abc123"}],
                   error_message: nil
                 },
                 departure_time: "now",
@@ -185,13 +185,13 @@ defmodule QuickestRoute.Search.SearcherTest do
                   %QuickestRoute.Search.Place{
                     status: :ok,
                     original: "ghi",
-                    refined: %{"name" => "location_c", "place_id" => "ghi345"},
+                    refined: [%{"name" => "location_c", "place_id" => "ghi345"}],
                     error_message: nil
                   },
                   %QuickestRoute.Search.Place{
                     status: :ok,
                     original: "def",
-                    refined: %{"name" => "location_b", "place_id" => "def234"},
+                    refined: [%{"name" => "location_b", "place_id" => "def234"}],
                     error_message: nil
                   }
                 ],

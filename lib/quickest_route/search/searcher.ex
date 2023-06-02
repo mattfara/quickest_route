@@ -77,7 +77,7 @@ defmodule QuickestRoute.Search.Searcher do
          {place_context,
           {user_input,
            %{
-             "candidates" => [refined],
+             "candidates" => [_|_] = refined,
              "status" => "OK"
            }}}
        }),
