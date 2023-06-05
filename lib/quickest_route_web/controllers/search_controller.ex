@@ -13,12 +13,8 @@ defmodule QuickestRouteWeb.SearchController do
 
   def run(conn, %{"parameters" => params}) do
     with {:ok, validated_params} <- Search.validate(params),
-         {:ok, search_info} <- Search.convert(validated_params),
-         ## TODO - need to work out how to deal with unrefined results and multiple results
-         ## probably use the `else` to drive some view behavior
-         ## ask user to try another input or select from the choices, respectively
-         {:ok, refined_search} <- Search.refine(search_info),
-         {:ok, completed_search} <- Search.search(refined_search) do
+         {:ok, search_info} <- Search.refine(validated_params),
+         {:ok, completed_search} <- Search.search(search_info) do
       sorted_result =
         Enum.sort_by(
           completed_search.search_summary,

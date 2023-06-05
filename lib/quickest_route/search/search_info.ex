@@ -6,7 +6,7 @@ defmodule QuickestRoute.Search.SearchInfo do
   use StructAccess
   ## TODO - really want to use this just for tests? see google_test.exs
 
-  alias QuickestRoute.Search.{Parameters, Place}
+  alias QuickestRoute.Search.Place
 
   defstruct [
     :origin,
@@ -25,18 +25,4 @@ defmodule QuickestRoute.Search.SearchInfo do
             tuple()
           ]
         }
-
-  def init(%Parameters{
-        from: from,
-        to: [_ | _] = to,
-        departure_time: departure_time,
-        finally: finally
-      }) do
-    %__MODULE__{
-      origin: from,
-      departure_time: departure_time,
-      alternatives: to,
-      final_destination: finally
-    }
-  end
 end

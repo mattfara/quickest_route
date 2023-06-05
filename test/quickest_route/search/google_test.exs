@@ -83,11 +83,11 @@ defmodule QuickestRoute.Search.GoogleTest do
       }
 
       expect(ApiCaller.call(_url), do: ok_json)
+      api_key = "abc"
+      place = {:from, "user input"}
 
-      place = "user input"
-
-      assert %Place{status: :ok, original: ^place, refined: ^expected_candidates} =
-               Google.refine_place(place, "abc")
+      assert {:from, %Place{status: :ok, original: "user input", refined: ^expected_candidates}} =
+               Google.refine_place(place, api_key)
     end
 
     test "should return a Place with status = :error when non-200 json returned" do
@@ -98,13 +98,14 @@ defmodule QuickestRoute.Search.GoogleTest do
 
       expect(ApiCaller.call(_url), do: bad_json)
 
-      place = "user input"
+      place = {:to, "user input"}
 
-      assert %Place{
+      assert {:to, %Place{
                status: :error,
-               original: ^place,
-               error_message: "Unable to refine place \"user input\" for search"
-             } = Google.refine_place(place, "abc")
+               original: "user input",
+               error_message: "Unable to refine place \"user input\" for search",
+               refined: nil
+             }} = Google.refine_place(place, "abc")
     end
   end
 

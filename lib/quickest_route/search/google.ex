@@ -43,7 +43,7 @@ defmodule QuickestRoute.Search.Google do
   defp get_departure_time_query(%SearchInfo{departure_time: departure_time}),
     do: "departure_time=#{departure_time}"
 
-  # curry this? build FN with to_id then return FN that takes the search info
+  # URL should vary depending on whether user supplied a final destination
   defp curry_destination_query(to_id) do
     fn
       %SearchInfo{final_destination: nil} ->
@@ -54,37 +54,38 @@ defmodule QuickestRoute.Search.Google do
     end
   end
 
-  # defp get_destination_query(%Place{refined: [%{"place_id" => place_id}]}),
-  #  do: "destination=place_id:#{place_id}"
-
-  # defp get_destination_query(place_id), do: "destination=place_id:#{place_id}"
-
   @doc """
   Retrieves the official name and `place_id` for user input
   """
-  def refine_place(nil, _api_key), do: nil
+  def refine_place({:finally, nil}, _api_key), do: {:finally, %Place{status: :unused}}
 
-  def refine_place(user_place_name, api_key),
+  def refine_place({place_context, user_input}, api_key) when place_context in [:from, :to, :finally],
     do:
-      user_place_name
+      user_input
       |> get_place_url(api_key)
       |> ApiCaller.call()
-      |> parse_place_json(user_place_name)
+      |> parse_place_json(place_context, user_input)
 
-  defp parse_place_json(%{"status" => "OK", "candidates" => candidates}, place),
-    do: %Place{status: :ok, original: place, refined: candidates}
+  ## TODO - have to handle cases where multiple options are returned - maybe show
+  ## user the options and let them pick
+  defp parse_place_json(%{"status" => "OK", "candidates" => candidates}, atom, value),
+    do: {atom, %Place{status: :ok, original: value, refined: candidates}}
 
-  defp parse_place_json(_, place),
-    do: %Place{
-      status: :error,
-      original: place,
-      error_message: "Unable to refine place \"#{place}\" for search"
-    }
+  defp parse_place_json(_, atom, value),
+    do:
+      {atom,
+       %Place{
+         status: :error,
+         original: value,
+         error_message: "Unable to refine place \"#{value}\" for search"
+       }}
 
   @spec get_place_url(place :: String.t(), api_key :: String.t()) :: String.t()
+  def get_place_url(nil, _api_key), do: nil
   def get_place_url(place, api_key),
     do:
       "https://maps.googleapis.com/maps/api/place/findplacefromtext/json?fields=name%2Cplace_id&input=#{URI.encode(place)}&inputtype=textquery&key=#{api_key}"
+
 
   @spec parse_route_info({:ok, map()}) :: map()
   def parse_route_info(
@@ -106,7 +107,8 @@ defmodule QuickestRoute.Search.Google do
     do: Map.put(place, :route_info, {@not_found, @not_found})
 
   defp sum_leg_property(legs, path_alternatives) do
-    Enum.reduce(legs, 0, fn leg, acc ->
+    legs
+    |> Enum.reduce(0, fn leg, acc ->
       leg
       |> MapHelpers.get_first(path_alternatives, "")
       |> Integer.parse()

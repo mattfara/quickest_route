@@ -4,12 +4,6 @@ defmodule QuickestRoute.Search do
   """
   alias QuickestRoute.Search.{Google, Parameters, Searcher, SearchInfo}
 
-  def search(search_info) do
-    search_info
-    |> Searcher.search(Google.get_api_key())
-    |> then(&{:ok, &1})
-  end
-
   @doc """
   Supplies an empty form for view
   """
@@ -19,21 +13,13 @@ defmodule QuickestRoute.Search do
 
   def convert(%Parameters{} = validated_params), do: {:ok, SearchInfo.init(validated_params)}
 
-  # @spec refine(SearchInfo.t()) :: SearchInfo.t()
-  def refine(%SearchInfo{
-        origin: from,
-        alternatives: [_ | _] = to,
-        departure_time: departure_time,
-        final_destination: final_destination
-      }) do
-    api_key = Google.get_api_key()
+  def refine(%Parameters{} = parameters), do: Searcher.refine(parameters, Google.get_api_key())
 
-    {:ok,
-     %SearchInfo{
-       origin: Google.refine_place(from, api_key),
-       departure_time: departure_time,
-       alternatives: Enum.map(to, fn x -> Google.refine_place(x, api_key) end),
-       final_destination: Google.refine_place(final_destination, api_key)
-     }}
+  def search(search_info) do
+    search_info
+    |> Searcher.search(Google.get_api_key())
+    ## TODO - this shouldn't always be :ok
+    ## consider moving the tuple creation into `search`
+    |> then(&{:ok, &1})
   end
 end

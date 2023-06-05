@@ -11,4 +11,10 @@ defmodule QuickestRoute.MapHelpers do
       if value != nil, do: {:halt, value}, else: {:cont, acc}
     end)
   end
+
+  ## TODO - how can I apply to a k/v pair in a nested map, based on the following:
+  ### key
+  ### predicate -> true for value
+  ### surrounding context
+  
 end
