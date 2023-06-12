@@ -16,5 +16,4 @@ defmodule QuickestRoute.MapHelpers do
   ### key
   ### predicate -> true for value
   ### surrounding context
-  
 end

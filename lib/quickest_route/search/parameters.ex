@@ -1,6 +1,6 @@
 defmodule QuickestRoute.Search.Parameters do
   @moduledoc """
-  Schema for new search form
+  Embedded Ecto schema for new search form
   """
   alias Ecto.Changeset
 
@@ -21,14 +21,6 @@ defmodule QuickestRoute.Search.Parameters do
   @spec form :: Ecto.Changeset.t()
   def form, do: cast(%__MODULE__{}, %{}, @fields)
 
-  @spec changeset(map()) :: Changeset.t()
-  defp changeset(attrs),
-    do:
-      %__MODULE__{}
-      |> cast(attrs, @fields)
-      |> validate_required(@required)
-      |> validate_to()
-
   @spec validate(map()) :: {:ok, map()} | {:error, Changeset.t()}
   def validate(form) do
     form
@@ -39,6 +31,14 @@ defmodule QuickestRoute.Search.Parameters do
       {:error, %Changeset{}} = error -> error
     end
   end
+
+  @spec changeset(map()) :: Changeset.t()
+  defp changeset(attrs),
+    do:
+      %__MODULE__{}
+      |> cast(attrs, @fields)
+      |> validate_required(@required)
+      |> validate_to()
 
   defp validate_to(%{changes: %{to: []}} = changeset),
     do: add_error(changeset, :to, "must supply at least one destination")

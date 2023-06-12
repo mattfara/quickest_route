@@ -6,10 +6,10 @@ defmodule QuickestRoute.Search.Place do
     :error_message
   ]
 
-  ## TODO - is there room for an OR ADT here wrt status property?
+  @type status :: :ok | :unused | :error
 
   @type t :: %__MODULE__{
-          status: :atom,
+          status: status,
           original: String.t(),
           refined: map(),
           error_message: String.t()

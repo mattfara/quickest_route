@@ -20,5 +20,4 @@ defmodule Utils.PipeHelpers do
 
   ## TODO - what about something like a
   ## `pipe_if_else`? Different from above?
-
 end

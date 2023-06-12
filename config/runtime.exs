@@ -23,7 +23,7 @@ end
 google_api_key =
   System.get_env("GOOGLE_API_KEY") ||
     raise """
-    env variable GOOGLE_API_KEY missing!
+    environment variable `GOOGLE_API_KEY` missing!
     """
 
 config :quickest_route, QuickestRoute.Search.Google, google_api_key: google_api_key
@@ -32,8 +32,8 @@ if config_env() == :prod do
   database_url =
     System.get_env("DATABASE_URL") ||
       raise """
-      environment variable DATABASE_URL is missing.
-      For example: ecto://USER:PASS@HOST/DATABASE
+      environment variable `DATABASE_URL` missing!
+      For example: `ecto://USER:PASS@HOST/DATABASE`
       """
 
   maybe_ipv6 = if System.get_env("ECTO_IPV6"), do: [:inet6], else: []
@@ -52,8 +52,8 @@ if config_env() == :prod do
   secret_key_base =
     System.get_env("SECRET_KEY_BASE") ||
       raise """
-      environment variable SECRET_KEY_BASE is missing.
-      You can generate one by calling: mix phx.gen.secret
+      environment variable `SECRET_KEY_BASE` missing!
+      You can generate one by calling: `mix phx.gen.secret`
       """
 
   host = System.get_env("PHX_HOST") || "example.com"

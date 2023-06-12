@@ -1,5 +1,13 @@
 <h1>Quickest Route</h1>
 
+<div>
+  <p>
+     Enter your starting location and alternative destinations. Optionally include
+     a departure time and a final destination. This app will try to help you 
+     find the quickest route amongst your alternatives.
+  </p>
+</div>
+
 <%= form_for @changeset, Routes.search_path(@conn, :run), fn f ->  %>
   <%= if @changeset.action do %>
     <div class="alert alert-danger">
@@ -34,7 +42,6 @@
     </article>
 
     <article class="column">
-      <!-- TODO does VScode have anything for completing html tags??? -->
       <h3>And Finally To...</h3>
       <div>
         <label>Location</label>
