@@ -12,14 +12,8 @@ defmodule QuickestRoute.Search.Searcher do
       ) do
     refined =
       parameters
-      |> Map.take([:from, :to, :finally])
-      |> Map.to_list()
-      |> Enum.map(&maybe_distribute_place_context/1)
-      |> List.flatten()
-      |> Enum.map(fn {place_context, user_input} ->
-        {place_context, {user_input, Google.get_place_url(user_input, api_key)}}
-      end)
-      ## BUG - these asyc tasks get called twice per list member.....
+      |> prepare(api_key)
+      ## BUG - these async tasks get called twice per list member.....
       ## at least when using mimic expect.....
       |> Task.async_stream(&get_refinement/1)
       |> Stream.map(&to_place_struct/1)
@@ -42,6 +36,17 @@ defmodule QuickestRoute.Search.Searcher do
       ## rest in background
     end
   end
+
+  defp prepare(parameters, api_key),
+    do:
+      parameters
+      |> Map.take([:from, :to, :finally])
+      |> Map.to_list()
+      |> Enum.map(&maybe_distribute_place_context/1)
+      |> List.flatten()
+      |> Enum.map(fn {place_context, user_input} ->
+        {place_context, {user_input, Google.get_place_url(user_input, api_key)}}
+      end)
 
   defp get_refinement({:finally, {nil, nil}} = unused),
     do: unused
@@ -66,7 +71,8 @@ defmodule QuickestRoute.Search.Searcher do
     Map.put(search_info, :alternatives, [to | alts])
   end
 
-  defp maybe_distribute_place_context({atom, [_ | _] = val}), do: Enum.map(val, fn v -> {atom, v} end)
+  defp maybe_distribute_place_context({atom, [_ | _] = val}),
+    do: Enum.map(val, fn v -> {atom, v} end)
 
   defp maybe_distribute_place_context(x), do: x
 
@@ -77,7 +83,7 @@ defmodule QuickestRoute.Search.Searcher do
          {place_context,
           {user_input,
            %{
-             "candidates" => [_|_] = refined,
+             "candidates" => [_ | _] = refined,
              "status" => "OK"
            }}}
        }),

@@ -6,11 +6,17 @@ defmodule QuickestRouteWeb.SearchController do
 
   action_fallback(FallbackController)
 
+  @doc """
+  Presents search form to user
+  """
   def new(conn, _params) do
     changeset = Search.form()
     render(conn, "new.html", changeset: changeset)
   end
 
+  @doc """
+  Processes user search input
+  """
   def run(conn, %{"parameters" => params}) do
     with {:ok, validated_params} <- Search.validate(params),
          {:ok, search_info} <- Search.refine(validated_params),

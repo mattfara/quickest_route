@@ -58,48 +58,48 @@ defmodule QuickestRoute.Search.SearcherTest do
     end
   end
 
-      ## TODO - rename
-      @responses %{
-        ok_full_context: %{
-          location_a: %{
-            "status" => "OK",
-            "candidates" => [
-              %{
-                "name" => "location_a",
-                "place_id" => "abc123"
-              }
-            ]
-          },
-          location_b: %{
-            "status" => "OK",
-            "candidates" => [
-              %{
-                "name" => "location_b",
-                "place_id" => "def234"
-              }
-            ]
-          },
-          location_c: %{
-            "status" => "OK",
-            "candidates" => [
-              %{
-                "name" => "location_c",
-                "place_id" => "ghi345"
-              }
-            ]
-          },
-          location_d: %{
-            "status" => "OK",
-            "candidates" => [
-              %{
-                "name" => "location_d",
-                "place_id" => "jkl456"
-              }
-            ]
+  ## TODO - rename
+  @responses %{
+    ok_full_context: %{
+      location_a: %{
+        "status" => "OK",
+        "candidates" => [
+          %{
+            "name" => "location_a",
+            "place_id" => "abc123"
           }
-        },
-        bad: %{}
+        ]
+      },
+      location_b: %{
+        "status" => "OK",
+        "candidates" => [
+          %{
+            "name" => "location_b",
+            "place_id" => "def234"
+          }
+        ]
+      },
+      location_c: %{
+        "status" => "OK",
+        "candidates" => [
+          %{
+            "name" => "location_c",
+            "place_id" => "ghi345"
+          }
+        ]
+      },
+      location_d: %{
+        "status" => "OK",
+        "candidates" => [
+          %{
+            "name" => "location_d",
+            "place_id" => "jkl456"
+          }
+        ]
       }
+    },
+    bad: %{}
+  }
 
   describe "refine/1" do
     setup do
@@ -122,7 +122,6 @@ defmodule QuickestRoute.Search.SearcherTest do
             @responses.ok_full_context.location_d
         end
       end)
-
     end
 
     test "should refine search including `final_destination` and multiple alternatives into `SearchInfo`",

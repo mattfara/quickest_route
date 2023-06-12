@@ -100,12 +100,13 @@ defmodule QuickestRoute.Search.GoogleTest do
 
       place = {:to, "user input"}
 
-      assert {:to, %Place{
-               status: :error,
-               original: "user input",
-               error_message: "Unable to refine place \"user input\" for search",
-               refined: nil
-             }} = Google.refine_place(place, "abc")
+      assert {:to,
+              %Place{
+                status: :error,
+                original: "user input",
+                error_message: "Unable to refine place \"user input\" for search",
+                refined: nil
+              }} = Google.refine_place(place, "abc")
     end
   end
 
